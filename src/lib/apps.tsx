@@ -186,7 +186,9 @@ export const APPS: AppDef[] = [
     icon: <WantedIcon />,
     Component: WantedApp,
     size: { w: 500, h: 640 },
-    dock: false,
+    dock: true,
+    // thirteen icons already crowd a phone dock; Launchpad covers it there
+    secondaryDock: true,
     desktop: false,
     keywords: ["wanted", "bounty", "poster", "one piece", "luffy", "pirate", "fun"],
     menus: [FILE_MENU, WINDOW_MENU],

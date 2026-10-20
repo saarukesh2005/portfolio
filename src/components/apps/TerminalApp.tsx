@@ -7,6 +7,10 @@ import { DevilFruit } from "@/components/Icons";
 
 type Line = { id: number; node: ReactNode };
 
+/** every id `open` accepts, surfaced in `help` so the list can't go stale */
+const OPEN_TARGETS =
+  "about · projects · numbers · calendar · photos · resume · contact · calculator · wanted · settings";
+
 const USER = "guest";
 const HOST = profile.name.split(" ")[0].toLowerCase() + "-mbp";
 
@@ -185,13 +189,21 @@ export default function TerminalApp() {
       }
 
       case "open": {
+        // Kept here rather than read from the app registry, because the
+        // registry imports this component — reading it back would be a cycle.
         const map: Record<string, { app: string; size?: { w: number; h: number } }> = {
-          about: { app: "about" },
-          projects: { app: "projects", size: { w: 880, h: 600 } },
-          resume: { app: "resume", size: { w: 760, h: 620 } },
+          about: { app: "about", size: { w: 840, h: 560 } },
+          projects: { app: "projects", size: { w: 900, h: 610 } },
+          numbers: { app: "numbers", size: { w: 880, h: 600 } },
+          calendar: { app: "calendar", size: { w: 760, h: 580 } },
+          photos: { app: "photos", size: { w: 820, h: 580 } },
+          resume: { app: "resume", size: { w: 780, h: 640 } },
           contact: { app: "mail", size: { w: 720, h: 540 } },
           mail: { app: "mail", size: { w: 720, h: 540 } },
-          settings: { app: "settings", size: { w: 680, h: 480 } },
+          calculator: { app: "calculator", size: { w: 300, h: 496 } },
+          wanted: { app: "wanted", size: { w: 500, h: 640 } },
+          bounty: { app: "wanted", size: { w: 500, h: 640 } },
+          settings: { app: "settings", size: { w: 700, h: 520 } },
         };
         const t = map[arg.toLowerCase()];
         if (!t) return push(<p className={C.r}>open: unknown app “{arg}”. Try: {Object.keys(map).join(", ")}</p>);
@@ -410,7 +422,7 @@ function Help() {
     ["skills", "what I work with"],
     ["ls / projects", "list projects"],
     ["cat <project>", "read a project in full"],
-    ["open <app>", "launch about · projects · resume · contact · settings"],
+    ["open <app>", OPEN_TARGETS],
     ["contact", "email address + compose window"],
     ["social", "links to every profile"],
     ["resume", "open the résumé"],
