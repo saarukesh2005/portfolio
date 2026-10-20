@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import DocumentImport from "@/components/apps/DocumentImport";
 import {
   EMPTY_FIGURES,
   FIELDS,
@@ -29,6 +30,7 @@ function format(value: number | null, unit: Ratio["unit"]) {
 export default function AnalyserApp() {
   const [figures, setFigures] = useState<Figures>(SAMPLE);
   const [sampleLoaded, setSampleLoaded] = useState(true);
+  const [importing, setImporting] = useState(false);
 
   const ratios = useMemo(() => computeRatios(figures), [figures]);
   const computed = ratios.filter((r) => r.value !== null).length;
@@ -49,7 +51,16 @@ export default function AnalyserApp() {
      * stacked layout. The container and the element that queries it have to be
      * different elements — nothing can query its own container.
      */
-    <div className="@container h-full">
+    <div className="@container relative h-full">
+      {importing && (
+        <DocumentImport
+          onClose={() => setImporting(false)}
+          onApply={(found) => {
+            setSampleLoaded(false);
+            setFigures((f) => ({ ...f, ...found }));
+          }}
+        />
+      )}
       <div className="flex h-full flex-col @[680px]:flex-row">
       {/* ── inputs ─────────────────────────────────────────────── */}
       <div
@@ -59,6 +70,12 @@ export default function AnalyserApp() {
         <div className="mb-3 flex items-center justify-between gap-2">
           <h2 className="text-[13px] font-semibold">Figures</h2>
           <div className="flex gap-1.5">
+            <button
+              onClick={() => setImporting(true)}
+              className="rounded-md bg-[var(--accent)] px-2 py-1 text-[11.5px] font-medium text-white transition-opacity hover:opacity-88"
+            >
+              Import
+            </button>
             <button
               onClick={() => {
                 setFigures(SAMPLE);

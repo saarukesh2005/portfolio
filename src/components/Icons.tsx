@@ -361,6 +361,18 @@ export function TimeMachineIcon() {
   );
 }
 
+export function ToolkitIcon() {
+  return (
+    <Tile from="#ffc46b" to="#d9731a">
+      <svg viewBox="0 0 48 48" className="relative h-[60%] w-[60%]" fill="none" stroke="#fff" strokeWidth="3.1" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M9 34c3-9 6-13 9.5-13S23 29 27 29s6-4 8.5-11" />
+        <path d="M31.5 14.5H39V22" />
+        <path d="M9 39h30" strokeOpacity="0.45" />
+      </svg>
+    </Tile>
+  );
+}
+
 export function GithubIcon() {
   return (
     <Tile from="#3a3f47" to="#101316">

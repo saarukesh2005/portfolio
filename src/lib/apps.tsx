@@ -10,6 +10,7 @@ import SettingsApp from "@/components/apps/SettingsApp";
 import CrewApp from "@/components/apps/CrewApp";
 import AnalyserApp from "@/components/apps/AnalyserApp";
 import TimeMachineApp from "@/components/apps/TimeMachineApp";
+import ToolkitApp from "@/components/apps/ToolkitApp";
 import CalendarApp from "@/components/apps/CalendarApp";
 import NumbersApp from "@/components/apps/NumbersApp";
 import PhotosApp from "@/components/apps/PhotosApp";
@@ -24,6 +25,7 @@ import {
   ShipIcon,
   AnalyserIcon,
   TimeMachineIcon,
+  ToolkitIcon,
   SettingsIcon,
   GithubIcon,
   LinkedinIcon,
@@ -129,6 +131,19 @@ const ALL_APPS: AppDef[] = [
     secondaryDock: true,
     desktop: false,
     keywords: ["numbers", "spreadsheet", "ratios", "financials", "analysis", "bdl", "charts", "excel"],
+    menus: [FILE_MENU, EDIT_MENU, VIEW_MENU, WINDOW_MENU],
+  },
+  {
+    id: "toolkit",
+    name: "Finance Toolkit",
+    blurb: "Loan EMI with an amortisation chart, SIP projections, and break-even analysis.",
+    icon: <ToolkitIcon />,
+    Component: ToolkitApp,
+    size: { w: 900, h: 620 },
+    dock: true,
+    secondaryDock: true,
+    desktop: false,
+    keywords: ["toolkit", "finance", "loan", "emi", "sip", "lumpsum", "investment", "break-even", "breakeven", "mortgage", "calculator", "planner"],
     menus: [FILE_MENU, EDIT_MENU, VIEW_MENU, WINDOW_MENU],
   },
   {
