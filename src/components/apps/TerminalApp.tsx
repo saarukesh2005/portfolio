@@ -10,7 +10,7 @@ type Line = { id: number; node: ReactNode };
 
 /** every id `open` accepts, surfaced in `help` so the list can't go stale */
 const OPEN_TARGETS =
-  "about · projects · numbers · calendar · photos · resume · crew · contact · terminal · calculator · wanted · settings";
+  "about · projects · analyser · numbers · calendar · photos · resume · crew · contact · terminal · calculator · wanted · settings";
 
 const USER = "guest";
 const HOST = profile.name.split(" ")[0].toLowerCase() + "-mbp";
@@ -196,6 +196,8 @@ export default function TerminalApp() {
           about: { app: "about", size: { w: 840, h: 560 } },
           terminal: { app: "terminal", size: { w: 760, h: 480 } },
           projects: { app: "projects", size: { w: 900, h: 610 } },
+          analyser: { app: "analyser", size: { w: 960, h: 640 } },
+          ratios: { app: "analyser", size: { w: 960, h: 640 } },
           numbers: { app: "numbers", size: { w: 880, h: 600 } },
           calendar: { app: "calendar", size: { w: 760, h: 580 } },
           photos: { app: "photos", size: { w: 820, h: 580 } },

@@ -8,6 +8,7 @@ import ResumeApp from "@/components/apps/ResumeApp";
 import MailApp from "@/components/apps/MailApp";
 import SettingsApp from "@/components/apps/SettingsApp";
 import CrewApp from "@/components/apps/CrewApp";
+import AnalyserApp from "@/components/apps/AnalyserApp";
 import CalendarApp from "@/components/apps/CalendarApp";
 import NumbersApp from "@/components/apps/NumbersApp";
 import PhotosApp from "@/components/apps/PhotosApp";
@@ -20,6 +21,7 @@ import {
   ResumeIcon,
   MailIcon,
   ShipIcon,
+  AnalyserIcon,
   SettingsIcon,
   GithubIcon,
   LinkedinIcon,
@@ -95,6 +97,18 @@ const ALL_APPS: AppDef[] = [
       { label: "View", items: ["Clear Buffer  ⌘L"] },
       WINDOW_MENU,
     ],
+  },
+  {
+    id: "analyser",
+    name: "Ratio Analyser",
+    icon: <AnalyserIcon />,
+    Component: AnalyserApp,
+    size: { w: 960, h: 640 },
+    dock: true,
+    secondaryDock: true,
+    desktop: true,
+    keywords: ["ratio", "analyser", "analyzer", "analysis", "finance", "financial", "liquidity", "profitability", "leverage", "efficiency", "calculator", "balance sheet"],
+    menus: [FILE_MENU, EDIT_MENU, VIEW_MENU, WINDOW_MENU],
   },
   {
     id: "numbers",

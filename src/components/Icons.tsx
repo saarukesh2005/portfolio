@@ -325,6 +325,23 @@ export function ShipIcon() {
   );
 }
 
+export function AnalyserIcon() {
+  return (
+    <Tile from="#5ee6c0" to="#0f8a7e">
+      <svg viewBox="0 0 48 48" className="relative h-[64%] w-[64%]" fill="none">
+        {/* dial */}
+        <path d="M6 32a18 18 0 0 1 36 0" stroke="#ffffff" strokeOpacity="0.35" strokeWidth="5.5" strokeLinecap="round" />
+        {/* the "healthy" arc */}
+        <path d="M6 32A18 18 0 0 1 17 15.4" stroke="#ffffff" strokeWidth="5.5" strokeLinecap="round" />
+        <path d="M31 15.4A18 18 0 0 1 42 32" stroke="#ffffff" strokeWidth="5.5" strokeLinecap="round" />
+        {/* needle */}
+        <path d="M24 32 32.5 20.5" stroke="#17352f" strokeWidth="3.4" strokeLinecap="round" />
+        <circle cx="24" cy="32" r="3.6" fill="#17352f" />
+      </svg>
+    </Tile>
+  );
+}
+
 export function GithubIcon() {
   return (
     <Tile from="#3a3f47" to="#101316">
