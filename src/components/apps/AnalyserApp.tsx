@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import DocumentImport from "@/components/apps/DocumentImport";
+import { altmanZ, cashCycle, dupont } from "@/lib/finance";
 import {
   EMPTY_FIGURES,
   FIELDS,
@@ -33,6 +34,9 @@ export default function AnalyserApp() {
   const [importing, setImporting] = useState(false);
 
   const ratios = useMemo(() => computeRatios(figures), [figures]);
+  const dp = useMemo(() => dupont(figures), [figures]);
+  const z = useMemo(() => altmanZ(figures), [figures]);
+  const cc = useMemo(() => cashCycle(figures), [figures]);
   const computed = ratios.filter((r) => r.value !== null).length;
 
   const set = (key: keyof Figures, raw: string) => {
@@ -182,6 +186,99 @@ export default function AnalyserApp() {
             );
           })}
         </div>
+
+        {(dp || z || cc) && (
+          <section className="mt-6">
+            <h3 className="mb-2 text-[10.5px] font-semibold uppercase tracking-wider text-lo">
+              Diagnostics
+            </h3>
+            <div className="space-y-2">
+              {dp && (
+                <article className="rounded-xl border border-[var(--glass-stroke)] bg-[var(--fill-1)] p-3">
+                  <div className="flex flex-wrap items-baseline justify-between gap-x-3">
+                    <h4 className="text-[13.5px] font-semibold">DuPont decomposition</h4>
+                    <span className="font-mono text-[15px] tabular-nums">
+                      ROE {dp.roe.toFixed(1)}<span className="ml-0.5 text-[11px] text-lo">%</span>
+                    </span>
+                  </div>
+                  <p className="mt-0.5 font-mono text-[11px] text-lo">
+                    tax burden × interest burden × operating margin × asset turnover × equity multiplier
+                  </p>
+                  <div className="mt-2 flex flex-wrap gap-1.5">
+                    {[
+                      ["Tax burden", dp.taxBurden],
+                      ["Interest burden", dp.interestBurden],
+                      ["Operating margin", dp.operatingMargin],
+                      ["Asset turnover", dp.assetTurnover],
+                      ["Equity multiplier", dp.equityMultiplier],
+                    ].map(([k, v]) => (
+                      <span key={k as string} className="rounded-lg bg-[var(--fill-2)] px-2 py-1 text-[11.5px]">
+                        <span className="text-lo">{k as string} </span>
+                        <span className="font-mono tabular-nums">{(v as number).toFixed(3)}</span>
+                      </span>
+                    ))}
+                  </div>
+                  <p className="mt-2 text-[12.5px] leading-relaxed text-mid">
+                    Splits ROE into the five levers behind it, so a high return traceable to leverage
+                    reads differently from one earned on margin.
+                  </p>
+                </article>
+              )}
+
+              {z && (
+                <article className="rounded-xl border border-[var(--glass-stroke)] bg-[var(--fill-1)] p-3">
+                  <div className="flex flex-wrap items-baseline justify-between gap-x-3">
+                    <h4 className="text-[13.5px] font-semibold">Altman Z&prime;-score</h4>
+                    <span className="flex items-center gap-2">
+                      <span className="font-mono text-[15px] tabular-nums">{z.z.toFixed(2)}</span>
+                      <span
+                        className={`rounded-md px-1.5 py-[2px] text-[10.5px] ${
+                          z.zone === "Safe"
+                            ? "bg-emerald-500/18 text-emerald-400"
+                            : z.zone === "Grey"
+                              ? "bg-amber-500/18 text-amber-400"
+                              : "bg-red-500/18 text-red-400"
+                        }`}
+                      >
+                        {z.zone}
+                      </span>
+                    </span>
+                  </div>
+                  <div className="mt-2 flex flex-wrap gap-1.5">
+                    {z.parts.map((p) => (
+                      <span key={p.k} className="rounded-lg bg-[var(--fill-2)] px-2 py-1 text-[11.5px]">
+                        <span className="text-lo">{p.k} </span>
+                        <span className="font-mono tabular-nums">{p.v.toFixed(3)}</span>
+                      </span>
+                    ))}
+                  </div>
+                  <p className="mt-2 text-[12.5px] leading-relaxed text-mid">
+                    The private-company revision, which uses book equity rather than market
+                    capitalisation. Safe above 2.9, distress below 1.23.
+                  </p>
+                </article>
+              )}
+
+              {cc && (
+                <article className="rounded-xl border border-[var(--glass-stroke)] bg-[var(--fill-1)] p-3">
+                  <div className="flex flex-wrap items-baseline justify-between gap-x-3">
+                    <h4 className="text-[13.5px] font-semibold">Cash conversion cycle</h4>
+                    <span className="font-mono text-[15px] tabular-nums">
+                      {cc.ccc.toFixed(0)}<span className="ml-0.5 text-[11px] text-lo"> days</span>
+                    </span>
+                  </div>
+                  <p className="mt-0.5 font-mono text-[11px] text-lo">
+                    DIO {cc.dio.toFixed(0)} + DSO {cc.dso.toFixed(0)} − DPO {cc.dpo.toFixed(0)}
+                  </p>
+                  <p className="mt-2 text-[12.5px] leading-relaxed text-mid">
+                    Days between paying for stock and collecting on the sale. Negative means
+                    suppliers fund the working capital.
+                  </p>
+                </article>
+              )}
+            </div>
+          </section>
+        )}
 
         <p className="mt-5 text-[11.5px] leading-relaxed text-lo">
           Strong / Fair / Weak are broad general-purpose bands. They are not industry-adjusted — a

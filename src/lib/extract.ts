@@ -50,6 +50,10 @@ const PATTERNS: { key: keyof Figures; label: string; rx: RegExp; confidence: "hi
   { key: "equity", label: "Shareholders' equity", confidence: "medium", rx: /\bother\s+equity\b/i },
 
   { key: "totalAssets", label: "Total assets", confidence: "high", rx: /total\s+assets/i },
+
+  { key: "retainedEarnings", label: "Retained earnings", confidence: "high", rx: /retained\s+earnings/i },
+  { key: "retainedEarnings", label: "Retained earnings", confidence: "medium", rx: /(surplus|reserves\s+and\s+surplus)/i },
+  { key: "payables", label: "Trade payables", confidence: "high", rx: /(trade\s+payables?|accounts?\s+payable|sundry\s+creditors)/i },
 ];
 
 /**

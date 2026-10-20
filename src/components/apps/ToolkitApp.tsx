@@ -2,7 +2,9 @@
 
 import { useMemo, useState } from "react";
 
-type Tool = "loan" | "invest" | "breakeven";
+import { amortise, irr, npv, paybackPeriod, realReturn, requiredReturn, requiredSip, xirr } from "@/lib/finance";
+
+type Tool = "loan" | "invest" | "breakeven" | "cashflow";
 
 const money = (n: number) => "₹" + Math.round(n).toLocaleString("en-IN");
 const num = (n: number, dp = 2) => n.toLocaleString("en-IN", { maximumFractionDigits: dp });
@@ -86,36 +88,51 @@ export default function ToolkitApp() {
   const [rate, setRate] = useState("8.75");
   const [years, setYears] = useState("20");
 
+  const [prepay, setPrepay] = useState("0");
+  const [prepayMonth, setPrepayMonth] = useState("12");
+  const [prepayEvery, setPrepayEvery] = useState(true);
+  const [strategy, setStrategy] = useState<"reduce-tenure" | "reduce-emi">("reduce-tenure");
+
   const loan = useMemo(() => {
     const P = Number(principal) || 0;
-    const r = (Number(rate) || 0) / 12 / 100;
     const n = (Number(years) || 0) * 12;
-    if (P <= 0 || n <= 0) return null;
-    const emi = r === 0 ? P / n : (P * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
+    const extra = Number(prepay) || 0;
+    const from = Math.max(1, Number(prepayMonth) || 1);
 
-    let balance = P;
-    const outstanding: number[] = [];
-    const paid: number[] = [];
-    const labels: string[] = [];
-    let interestTotal = 0;
-    for (let m = 1; m <= n; m++) {
-      const interest = balance * r;
-      interestTotal += interest;
-      balance = Math.max(0, balance - (emi - interest));
-      if (m % 12 === 0 || m === n) {
-        outstanding.push(balance);
-        paid.push(P - balance);
-        labels.push(`Y${Math.ceil(m / 12)}`);
-      }
-    }
-    return { emi, total: emi * n, interestTotal, outstanding, paid, labels };
-  }, [principal, rate, years]);
+    const base = amortise({ principal: P, annualRate: Number(rate) || 0, months: n });
+    if (!base) return null;
+
+    const withPrepay =
+      extra > 0
+        ? amortise({
+            principal: P,
+            annualRate: Number(rate) || 0,
+            months: n,
+            prepayments: [{ month: from, amount: extra, recurring: prepayEvery }],
+            onPrepay: strategy,
+          })
+        : null;
+
+    const plan = withPrepay ?? base;
+    const yearly = plan.schedule.filter((row, i) => (i + 1) % 12 === 0 || i === plan.schedule.length - 1);
+
+    return {
+      ...plan,
+      saved: withPrepay ? base.totalInterest - withPrepay.totalInterest : 0,
+      monthsSaved: withPrepay ? base.monthsTaken - withPrepay.monthsTaken : 0,
+      outstanding: yearly.map((r) => r.closing),
+      paid: yearly.map((r) => P - r.closing),
+      labels: yearly.map((_, i) => `Y${i + 1}`),
+    };
+  }, [principal, rate, years, prepay, prepayMonth, prepayEvery, strategy]);
 
   /* ── investing ────────────────────────────────────────── */
   const [monthly, setMonthly] = useState("10000");
   const [lumpsum, setLumpsum] = useState("100000");
   const [iRate, setIRate] = useState("12");
   const [iYears, setIYears] = useState("15");
+  const [goal, setGoal] = useState("10000000");
+  const [inflation, setInflation] = useState("6");
 
   const invest = useMemo(() => {
     const m = Number(monthly) || 0;
@@ -155,10 +172,47 @@ export default function ToolkitApp() {
     return { units, revenue: units * p, contribution, margin: (contribution / p) * 100 };
   }, [fixed, price, variable]);
 
+  /* ── cashflows ────────────────────────────────────────── */
+  const [flowText, setFlowText] = useState(
+    "2024-01-01  -1000000\n2024-06-15   250000\n2025-01-10   400000\n2025-09-20   350000\n2026-03-01   300000"
+  );
+  const [discount, setDiscount] = useState("10");
+
+  const flows = useMemo(() => {
+    const rows = flowText
+      .split(/\r?\n/)
+      .map((l) => l.trim())
+      .filter(Boolean)
+      .map((l) => {
+        const m = l.match(/^(\d{4}-\d{2}-\d{2})?\s*(-?[\d,.]+)/);
+        if (!m) return null;
+        const amount = Number(m[2].replace(/,/g, ""));
+        if (!Number.isFinite(amount)) return null;
+        return { date: m[1] ? new Date(m[1]) : null, amount };
+      })
+      .filter(Boolean) as { date: Date | null; amount: number }[];
+
+    if (rows.length < 2) return null;
+    const dated = rows.every((r) => r.date && !Number.isNaN(r.date.getTime()));
+    const amounts = rows.map((r) => r.amount);
+
+    return {
+      count: rows.length,
+      dated,
+      npv: npv((Number(discount) || 0) / 100, amounts),
+      irr: irr(amounts),
+      xirr: dated ? xirr(rows.map((r) => ({ date: r.date!, amount: r.amount }))) : null,
+      payback: paybackPeriod(amounts),
+      invested: amounts.filter((a) => a < 0).reduce((s, a) => s + a, 0),
+      returned: amounts.filter((a) => a > 0).reduce((s, a) => s + a, 0),
+    };
+  }, [flowText, discount]);
+
   const TABS: { id: Tool; label: string }[] = [
     { id: "loan", label: "Loan / EMI" },
     { id: "invest", label: "SIP & Lumpsum" },
     { id: "breakeven", label: "Break-even" },
+    { id: "cashflow", label: "NPV / IRR / XIRR" },
   ];
 
   return (
@@ -187,14 +241,51 @@ export default function ToolkitApp() {
               <Field label="Loan amount" value={principal} onChange={setPrincipal} suffix="₹" />
               <Field label="Interest rate" value={rate} onChange={setRate} suffix="%" />
               <Field label="Tenure" value={years} onChange={setYears} suffix="yr" />
+
+              <p className="pt-2 text-[10.5px] font-semibold uppercase tracking-wider text-lo">Prepayment</p>
+              <Field label="Extra payment" value={prepay} onChange={setPrepay} suffix="₹" />
+              <Field label="From month" value={prepayMonth} onChange={setPrepayMonth} suffix="m" />
+              <label className="flex items-center justify-between gap-2 text-[12.5px] text-mid">
+                Repeat yearly
+                <input
+                  type="checkbox"
+                  checked={prepayEvery}
+                  onChange={(e) => setPrepayEvery(e.target.checked)}
+                  className="h-4 w-4 accent-[var(--accent)]"
+                />
+              </label>
+              <div className="flex gap-1.5 pt-1">
+                {(["reduce-tenure", "reduce-emi"] as const).map((v) => (
+                  <button
+                    key={v}
+                    onClick={() => setStrategy(v)}
+                    className={`flex-1 rounded-md px-2 py-1 text-[11.5px] transition-colors ${
+                      strategy === v ? "bg-[var(--accent)] text-white" : "bg-[var(--fill-2)] text-mid hover:bg-[var(--fill-3)]"
+                    }`}
+                  >
+                    {v === "reduce-tenure" ? "Cut tenure" : "Cut EMI"}
+                  </button>
+                ))}
+              </div>
             </div>
             {loan ? (
               <div className="space-y-3">
                 <div className="grid gap-2 @[520px]:grid-cols-3">
                   <Headline value={money(loan.emi)} caption="per month" />
-                  <Headline value={money(loan.interestTotal)} caption="total interest" />
-                  <Headline value={money(loan.total)} caption="total repayment" />
+                  <Headline value={money(loan.totalInterest)} caption="total interest" />
+                  <Headline value={money(loan.totalPaid)} caption="total repayment" />
                 </div>
+                {loan.saved > 0 && (
+                  <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-3">
+                    <p className="text-[13px] text-emerald-300">
+                      Prepaying saves <strong>{money(loan.saved)}</strong> in interest
+                      {loan.monthsSaved > 0 && (
+                        <> and clears the loan {Math.floor(loan.monthsSaved / 12)}y {loan.monthsSaved % 12}m early</>
+                      )}
+                      .
+                    </p>
+                  </div>
+                )}
                 <div className="rounded-xl border border-[var(--glass-stroke)] bg-[var(--fill-1)] p-3">
                   <p className="mb-1 text-[12px] text-mid">
                     Outstanding (solid) vs principal repaid (dashed)
@@ -202,7 +293,7 @@ export default function ToolkitApp() {
                   <Chart a={loan.outstanding} b={loan.paid} labels={loan.labels} />
                 </div>
                 <p className="text-[12px] leading-relaxed text-lo">
-                  Interest is {num((loan.interestTotal / (Number(principal) || 1)) * 100, 0)}% of the
+                  Interest is {num((loan.totalInterest / (Number(principal) || 1)) * 100, 0)}% of the
                   amount borrowed. Early instalments are mostly interest — that is why prepaying
                   early saves far more than prepaying late.
                 </p>
@@ -220,6 +311,10 @@ export default function ToolkitApp() {
               <Field label="One-off lumpsum" value={lumpsum} onChange={setLumpsum} suffix="₹" />
               <Field label="Expected return" value={iRate} onChange={setIRate} suffix="%" />
               <Field label="Period" value={iYears} onChange={setIYears} suffix="yr" />
+              <Field label="Inflation" value={inflation} onChange={setInflation} suffix="%" />
+
+              <p className="pt-2 text-[10.5px] font-semibold uppercase tracking-wider text-lo">Goal seek</p>
+              <Field label="Target corpus" value={goal} onChange={setGoal} suffix="₹" />
             </div>
             {invest ? (
               <div className="space-y-3">
@@ -232,14 +327,100 @@ export default function ToolkitApp() {
                   <p className="mb-1 text-[12px] text-mid">Value (solid) vs contributions (dashed)</p>
                   <Chart a={invest.value} b={invest.contributed} labels={invest.labels} />
                 </div>
+                <div className="grid gap-2 @[520px]:grid-cols-2">
+                  <div className="rounded-xl border border-[var(--glass-stroke)] bg-[var(--fill-1)] p-3">
+                    <p className="mb-1 text-[11px] font-semibold uppercase tracking-wider text-lo">To reach {money(Number(goal) || 0)}</p>
+                    {(() => {
+                      const need = requiredSip(Number(goal) || 0, Number(iRate) || 0, Number(iYears) || 0, Number(lumpsum) || 0);
+                      const rr = requiredReturn(Number(goal) || 0, Number(monthly) || 0, Number(iYears) || 0, Number(lumpsum) || 0);
+                      return (
+                        <ul className="space-y-1 text-[12.5px] text-mid">
+                          <li>
+                            invest <strong className="font-mono">{need === null ? "—" : money(need)}</strong>/month at {num(Number(iRate) || 0, 1)}%
+                          </li>
+                          <li>
+                            or earn <strong className="font-mono">{rr === null ? "—" : num(rr, 2) + "%"}</strong> on {money(Number(monthly) || 0)}/month
+                          </li>
+                        </ul>
+                      );
+                    })()}
+                  </div>
+                  <div className="rounded-xl border border-[var(--glass-stroke)] bg-[var(--fill-1)] p-3">
+                    <p className="mb-1 text-[11px] font-semibold uppercase tracking-wider text-lo">After inflation</p>
+                    <p className="text-[12.5px] text-mid">
+                      real return <strong className="font-mono">{num(realReturn(Number(iRate) || 0, Number(inflation) || 0), 2)}%</strong>
+                      {" "}· {money(invest.final / Math.pow(1 + (Number(inflation) || 0) / 100, Number(iYears) || 0))} in today&rsquo;s money
+                    </p>
+                  </div>
+                </div>
                 <p className="text-[12px] leading-relaxed text-lo">
                   Growth is {num((invest.gain / Math.max(1, invest.invested)) * 100, 0)}% of what you
                   contributed. A projection at a constant rate, not a forecast — real returns vary
-                  year to year and the order they arrive in matters.
+                  year to year, and the order they arrive in matters. Real return uses Fisher, not
+                  nominal minus inflation.
                 </p>
               </div>
             ) : (
               <p className="text-[13px] text-lo">Enter a period.</p>
+            )}
+          </div>
+        )}
+
+        {tool === "cashflow" && (
+          <div className="grid gap-4 @[640px]:grid-cols-[270px_1fr]">
+            <div className="space-y-2">
+              <p className="text-[11px] font-semibold uppercase tracking-wider text-lo">
+                Cashflows — one per line
+              </p>
+              <textarea
+                value={flowText}
+                onChange={(e) => setFlowText(e.target.value)}
+                aria-label="Cashflows"
+                className="mac-scroll h-[190px] w-full resize-none rounded-xl border border-[var(--glass-stroke)] bg-[var(--fill-1)] p-2.5 font-mono text-[12px] leading-relaxed outline-none focus:border-[var(--accent)]"
+              />
+              <p className="text-[11px] leading-relaxed text-lo">
+                <code>YYYY-MM-DD amount</code>, outflows negative. Drop the dates and it treats them
+                as equal periods.
+              </p>
+              <Field label="Discount rate" value={discount} onChange={setDiscount} suffix="%" />
+            </div>
+
+            {flows ? (
+              <div className="space-y-3">
+                <div className="grid gap-2 @[520px]:grid-cols-3">
+                  <Headline value={money(flows.npv)} caption={`NPV at ${num(Number(discount) || 0, 1)}%`} />
+                  <Headline
+                    value={flows.xirr !== null ? num(flows.xirr * 100, 2) + "%" : flows.irr !== null ? num(flows.irr * 100, 2) + "%" : "—"}
+                    caption={flows.xirr !== null ? "XIRR (actual dates)" : "IRR (equal periods)"}
+                  />
+                  <Headline
+                    value={flows.payback !== null ? num(flows.payback, 2) : "—"}
+                    caption="periods to payback"
+                  />
+                </div>
+
+                <div className="rounded-xl border border-[var(--glass-stroke)] bg-[var(--fill-1)] p-3 text-[12.5px] text-mid">
+                  <p>
+                    {flows.count} flows · {money(Math.abs(flows.invested))} out ·{" "}
+                    {money(flows.returned)} back
+                    {flows.dated ? " · dated, so XIRR applies" : " · undated, so equal periods assumed"}
+                  </p>
+                  <p className={`mt-1.5 ${flows.npv >= 0 ? "text-emerald-400" : "text-amber-400"}`}>
+                    {flows.npv >= 0
+                      ? `Positive NPV — the project clears a ${num(Number(discount) || 0, 1)}% hurdle rate.`
+                      : `Negative NPV — the project does not clear a ${num(Number(discount) || 0, 1)}% hurdle rate.`}
+                  </p>
+                </div>
+
+                <p className="text-[12px] leading-relaxed text-lo">
+                  IRR is found numerically — Newton&ndash;Raphson, falling back to bisection when it
+                  will not converge. A series that never changes sign has no IRR, and one that
+                  changes sign more than once can have several; NPV at a stated hurdle rate is the
+                  more reliable read in both cases.
+                </p>
+              </div>
+            ) : (
+              <p className="text-[13px] text-lo">Enter at least two cashflows.</p>
             )}
           </div>
         )}

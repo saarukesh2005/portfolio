@@ -19,6 +19,8 @@ export type Figures = {
   totalDebt: number | null;
   equity: number | null;
   totalAssets: number | null;
+  retainedEarnings: number | null;
+  payables: number | null;
 };
 
 export const EMPTY_FIGURES: Figures = {
@@ -34,6 +36,8 @@ export const EMPTY_FIGURES: Figures = {
   totalDebt: null,
   equity: null,
   totalAssets: null,
+  retainedEarnings: null,
+  payables: null,
 };
 
 export type FieldDef = { key: keyof Figures; label: string; group: "Income statement" | "Balance sheet" };
@@ -52,6 +56,8 @@ export const FIELDS: FieldDef[] = [
   { key: "totalDebt", label: "Total debt", group: "Balance sheet" },
   { key: "equity", label: "Shareholders' equity", group: "Balance sheet" },
   { key: "totalAssets", label: "Total assets", group: "Balance sheet" },
+  { key: "retainedEarnings", label: "Retained earnings", group: "Balance sheet" },
+  { key: "payables", label: "Trade payables", group: "Balance sheet" },
 ];
 
 export type Verdict = "strong" | "fair" | "weak" | "none";
@@ -192,4 +198,6 @@ export const SAMPLE: Figures = {
   totalDebt: 520,
   equity: 1460,
   totalAssets: 2610,
+  retainedEarnings: 905,
+  payables: 384,
 };
