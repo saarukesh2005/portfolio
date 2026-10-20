@@ -8,7 +8,10 @@ import { useSystem, useWindows } from "@/lib/store";
 export default function MissionControl() {
   const open = useSystem((s) => s.missionControl);
   const setOpen = useSystem((s) => s.setMissionControl);
-  const windows = useWindows((s) => s.windows);
+  const all = useWindows((s) => s.windows);
+  // only count windows that have a registry entry, so the header can never
+  // disagree with the cards below it
+  const windows = all.filter((w) => appById(w.appId));
   const restore = useWindows((s) => s.restore);
   const close = useWindows((s) => s.close);
 

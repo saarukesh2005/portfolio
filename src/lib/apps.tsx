@@ -7,6 +7,7 @@ import TerminalApp from "@/components/apps/TerminalApp";
 import ResumeApp from "@/components/apps/ResumeApp";
 import MailApp from "@/components/apps/MailApp";
 import SettingsApp from "@/components/apps/SettingsApp";
+import CrewApp from "@/components/apps/CrewApp";
 import CalendarApp from "@/components/apps/CalendarApp";
 import NumbersApp from "@/components/apps/NumbersApp";
 import PhotosApp from "@/components/apps/PhotosApp";
@@ -18,6 +19,7 @@ import {
   TerminalIcon,
   ResumeIcon,
   MailIcon,
+  ShipIcon,
   SettingsIcon,
   GithubIcon,
   LinkedinIcon,
@@ -28,15 +30,14 @@ import {
   WantedIcon,
 } from "@/components/Icons";
 import { profile } from "@/content/profile";
-import { financials } from "@/content/financials";
-import { gallery } from "@/content/gallery";
+import { HIDDEN_APPS } from "@/lib/visibility";
 
 export type AppDef = {
   id: string;
   /** shown in the menu bar, dock tooltip and window title */
   name: string;
   icon: ReactNode;
-  Component?: ComponentType<{ payload?: unknown }>;
+  Component?: ComponentType<{ payload?: unknown; active?: boolean }>;
   size: { w: number; h: number };
   /** pinned to the dock */
   dock: boolean;
@@ -143,6 +144,19 @@ const ALL_APPS: AppDef[] = [
     menus: [FILE_MENU, EDIT_MENU, VIEW_MENU, WINDOW_MENU],
   },
   {
+    id: "crew",
+    name: "Join my Crew",
+    icon: <ShipIcon />,
+    Component: CrewApp,
+    size: { w: 780, h: 620 },
+    dock: true,
+    // the phone dock holds six before Résumé and Contact get pushed off-screen
+    secondaryDock: true,
+    desktop: true,
+    keywords: ["crew", "join", "work with me", "collaborate", "hire", "team", "ship", "partner", "opportunities"],
+    menus: [FILE_MENU, EDIT_MENU, WINDOW_MENU],
+  },
+  {
     id: "mail",
     name: "Contact",
     icon: <MailIcon />,
@@ -219,15 +233,8 @@ const ALL_APPS: AppDef[] = [
 
 /**
  * An app with nothing in it is worse than no app at all — a visitor clicking
- * an empty window learns only that the site is unfinished. Numbers and Photos
- * stay hidden until their content files have something in them, and appear
- * on their own once they do.
+ * an empty window learns only that the site is unfinished. See lib/visibility.
  */
-const EMPTY: Record<string, boolean> = {
-  numbers: financials === null,
-  photos: gallery.length === 0,
-};
-
-export const APPS: AppDef[] = ALL_APPS.filter((a) => !EMPTY[a.id]);
+export const APPS: AppDef[] = ALL_APPS.filter((a) => !HIDDEN_APPS.has(a.id));
 
 export const appById = (id: string) => APPS.find((a) => a.id === id);

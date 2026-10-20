@@ -274,6 +274,57 @@ export function LaunchpadIcon() {
   );
 }
 
+/**
+ * The crew's ship — the "Join my Crew" icon. Drawn rather than bitmapped so it
+ * stays sharp under dock magnification, and so there's no watermark on it.
+ * Bold hull, two sails and the Jolly Roger; the rigging detail only resolves
+ * at larger sizes.
+ */
+export function ShipIcon() {
+  return (
+    <Tile from="#5fc8f5" to="#1264c0">
+      <svg viewBox="0 0 48 48" className="relative h-full w-full">
+        <g stroke="#17110c" strokeWidth="1.1" strokeLinejoin="round" strokeLinecap="round">
+          {/* masts */}
+          <path d="M18.5 29V10.5M31 29V8" stroke="#8a5a2b" strokeWidth="1.8" />
+
+          {/* fore sail, carrying the Jolly Roger */}
+          <path d="M18 11.5C13 13.5 10 18 9.5 27.5H18Z" fill="#fdfdfb" />
+          <g stroke="none">
+            <ellipse cx="13.6" cy="20.2" rx="2.5" ry="2.2" fill="#17110c" />
+            <path d="M9.9 17.6C11 16 16.2 16 17.3 17.6Z" fill="#17110c" />
+            <circle cx="12.6" cy="19.9" r="0.72" fill="#fdfdfb" />
+            <circle cx="14.6" cy="19.9" r="0.72" fill="#fdfdfb" />
+            <path d="M12.3 22.4h2.6" stroke="#fdfdfb" strokeWidth="0.75" strokeLinecap="round" />
+          </g>
+
+          {/* main sail */}
+          <path d="M31.5 9.5C37 12 40 18 40.5 27.5H31.5Z" fill="#fdfdfb" />
+          <g stroke="#e0322c" strokeWidth="1.5" fill="none" opacity="0.92">
+            <path d="M34 11.6C36.4 14.4 37.9 20.4 38.2 27.5" />
+            <path d="M31.9 10.4C33.6 13.6 34.6 20.2 34.8 27.5" />
+          </g>
+
+          {/* crow's nest */}
+          <path d="M28.6 8.4h4.8l-.9 2.6h-3Z" fill="#e0322c" />
+
+          {/* hull */}
+          <path d="M6.5 29.5h35c-1.6 6.4-6.2 9.6-17.5 9.6S8.1 35.9 6.5 29.5Z" fill="#a9682f" />
+          <path d="M7.2 29.5h33.6l-.7 3.2H7.9Z" fill="#e0322c" />
+          <g stroke="none" fill="#fdfdfb">
+            <circle cx="15" cy="31.1" r="1.05" />
+            <circle cx="24" cy="31.1" r="1.05" />
+            <circle cx="33" cy="31.1" r="1.05" />
+          </g>
+
+          {/* figurehead */}
+          <path d="M6.6 29.4C4 28.4 2.6 26.6 3.2 24.6c1.8.4 3.1 1.3 3.8 2.6Z" fill="#f5c525" />
+        </g>
+      </svg>
+    </Tile>
+  );
+}
+
 export function GithubIcon() {
   return (
     <Tile from="#3a3f47" to="#101316">

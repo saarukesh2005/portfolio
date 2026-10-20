@@ -54,7 +54,7 @@ function Key({
   );
 }
 
-export default function CalculatorApp() {
+export default function CalculatorApp({ active = true }: { active?: boolean }) {
   const [display, setDisplay] = useState("0");
   const [stored, setStored] = useState<number | null>(null);
   const [op, setOp] = useState<Op | null>(null);
@@ -114,7 +114,17 @@ export default function CalculatorApp() {
   };
 
   useEffect(() => {
+    // Without this gate the listener is global: every digit typed in the
+    // Terminal or the contact form also drives the calculator, and the
+    // preventDefault on "/" and Enter swallows those keys site-wide.
+    if (!active) return;
+
     const onKey = (e: KeyboardEvent) => {
+      const el = e.target as HTMLElement | null;
+      const tag = el?.tagName;
+      if (tag === "INPUT" || tag === "TEXTAREA" || el?.isContentEditable) return;
+      if (e.metaKey || e.ctrlKey || e.altKey) return;
+
       const k = e.key;
       if (/^[0-9]$/.test(k)) digit(k);
       else if (k === ".") digit(".");
@@ -129,7 +139,7 @@ export default function CalculatorApp() {
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [digit, operator, equals]);
+  }, [active, digit, operator, equals]);
 
   return (
     <div className="flex h-full flex-col bg-[#1c1c1e] p-3">

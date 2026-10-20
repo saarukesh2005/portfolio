@@ -189,7 +189,7 @@ export default function Window({ win, active }: { win: WindowInstance; active: b
 
       {/* body */}
       <div className="relative min-h-0 flex-1 overflow-hidden">
-        <Body payload={win.payload} />
+        <Body payload={win.payload} active={active} />
         {!active && <div className="pointer-events-none absolute inset-0 bg-black/8" />}
       </div>
 

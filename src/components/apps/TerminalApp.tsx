@@ -3,13 +3,14 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { profile, projects, skills, certifications, experience, education } from "@/content/profile";
 import { useSystem, useWindows } from "@/lib/store";
+import { HIDDEN_APPS } from "@/lib/visibility";
 import { DevilFruit } from "@/components/Icons";
 
 type Line = { id: number; node: ReactNode };
 
 /** every id `open` accepts, surfaced in `help` so the list can't go stale */
 const OPEN_TARGETS =
-  "about · projects · numbers · calendar · photos · resume · contact · calculator · wanted · settings";
+  "about · projects · numbers · calendar · photos · resume · crew · contact · terminal · calculator · wanted · settings";
 
 const USER = "guest";
 const HOST = profile.name.split(" ")[0].toLowerCase() + "-mbp";
@@ -193,11 +194,14 @@ export default function TerminalApp() {
         // registry imports this component — reading it back would be a cycle.
         const map: Record<string, { app: string; size?: { w: number; h: number } }> = {
           about: { app: "about", size: { w: 840, h: 560 } },
+          terminal: { app: "terminal", size: { w: 760, h: 480 } },
           projects: { app: "projects", size: { w: 900, h: 610 } },
           numbers: { app: "numbers", size: { w: 880, h: 600 } },
           calendar: { app: "calendar", size: { w: 760, h: 580 } },
           photos: { app: "photos", size: { w: 820, h: 580 } },
           resume: { app: "resume", size: { w: 780, h: 640 } },
+          crew: { app: "crew", size: { w: 780, h: 620 } },
+          join: { app: "crew", size: { w: 780, h: 620 } },
           contact: { app: "mail", size: { w: 720, h: 540 } },
           mail: { app: "mail", size: { w: 720, h: 540 } },
           calculator: { app: "calculator", size: { w: 300, h: 496 } },
@@ -206,7 +210,12 @@ export default function TerminalApp() {
           settings: { app: "settings", size: { w: 700, h: 520 } },
         };
         const t = map[arg.toLowerCase()];
-        if (!t) return push(<p className={C.r}>open: unknown app “{arg}”. Try: {Object.keys(map).join(", ")}</p>);
+        // a hidden app has no registry entry, so opening one would put a
+        // window in state that nothing can render or close
+        if (!t || HIDDEN_APPS.has(t.app)) {
+          const open = Object.keys(map).filter((k) => !HIDDEN_APPS.has(map[k].app));
+          return push(<p className={C.r}>open: unknown app “{arg}”. Try: {open.join(", ")}</p>);
+        }
         openWindow(t.app, { size: t.size });
         return push(<p className={C.d}>Launching {arg}…</p>);
       }
