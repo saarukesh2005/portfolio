@@ -18,6 +18,8 @@ export type WindowInstance = Rect & {
 };
 
 export const MENUBAR_H = 28;
+const MIN_W = 360;
+const MIN_H = 240;
 export const DOCK_RESERVE = 96;
 
 type OpenOptions = {
@@ -38,6 +40,8 @@ type WindowStore = {
   restore: (id: string) => void;
   toggleMaximize: (id: string, bounds: { w: number; h: number }) => void;
   setRect: (id: string, rect: Partial<Rect>) => void;
+  /** re-fit every window after the viewport changes size */
+  reflow: (vw: number, vh: number) => void;
   isRunning: (appId: string) => boolean;
   focusedId: () => string | null;
 };
@@ -132,6 +136,38 @@ export const useWindows = create<WindowStore>((set, get) => ({
     })),
 
   setRect: (id, rect) => set((s) => ({ windows: s.windows.map((w) => (w.id === id ? { ...w, ...rect } : w)) })),
+
+  /*
+   * Windows hold fixed geometry, so without this a phone rotation or a browser
+   * resize leaves them at their old size — a desktop-width window on a phone
+   * hangs off-screen with its controls out of reach.
+   */
+  reflow: (vw, vh) =>
+    set((s) => {
+      const mobile = vw < 760;
+      const maxH = vh - MENUBAR_H - DOCK_RESERVE;
+
+      return {
+        windows: s.windows.map((w) => {
+          if (mobile) {
+            return { ...w, x: 8, y: MENUBAR_H + 6, w: vw - 16, h: Math.max(MIN_H, maxH - 8), maximized: false, restore: undefined };
+          }
+
+          if (w.maximized) return { ...w, x: 0, y: MENUBAR_H, w: vw, h: vh - MENUBAR_H };
+
+          const width = Math.max(MIN_W, Math.min(w.w, vw - 48));
+          const height = Math.max(MIN_H, Math.min(w.h, maxH));
+          return {
+            ...w,
+            w: width,
+            h: height,
+            // keep at least a grabbable strip of title bar on screen
+            x: Math.min(Math.max(60 - width, w.x), vw - 60),
+            y: Math.min(Math.max(MENUBAR_H, w.y), vh - 40),
+          };
+        }),
+      };
+    }),
 
   isRunning: (appId) => get().windows.some((w) => w.appId === appId),
 

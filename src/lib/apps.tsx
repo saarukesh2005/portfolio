@@ -9,6 +9,7 @@ import MailApp from "@/components/apps/MailApp";
 import SettingsApp from "@/components/apps/SettingsApp";
 import CrewApp from "@/components/apps/CrewApp";
 import AnalyserApp from "@/components/apps/AnalyserApp";
+import TimeMachineApp from "@/components/apps/TimeMachineApp";
 import CalendarApp from "@/components/apps/CalendarApp";
 import NumbersApp from "@/components/apps/NumbersApp";
 import PhotosApp from "@/components/apps/PhotosApp";
@@ -22,6 +23,7 @@ import {
   MailIcon,
   ShipIcon,
   AnalyserIcon,
+  TimeMachineIcon,
   SettingsIcon,
   GithubIcon,
   LinkedinIcon,
@@ -121,6 +123,18 @@ const ALL_APPS: AppDef[] = [
     desktop: false,
     keywords: ["numbers", "spreadsheet", "ratios", "financials", "analysis", "bdl", "charts", "excel"],
     menus: [FILE_MENU, EDIT_MENU, VIEW_MENU, WINDOW_MENU],
+  },
+  {
+    id: "timemachine",
+    name: "Time Machine",
+    icon: <TimeMachineIcon />,
+    Component: TimeMachineApp,
+    size: { w: 860, h: 620 },
+    dock: true,
+    secondaryDock: true,
+    desktop: true,
+    keywords: ["time machine", "timemachine", "history", "journey", "backup", "restore", "past", "story", "travel"],
+    menus: [FILE_MENU, VIEW_MENU, WINDOW_MENU],
   },
   {
     id: "calendar",

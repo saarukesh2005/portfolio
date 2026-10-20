@@ -342,6 +342,25 @@ export function AnalyserIcon() {
   );
 }
 
+export function TimeMachineIcon() {
+  return (
+    <Tile from="#6e7f99" to="#1a2435">
+      <svg viewBox="0 0 48 48" className="relative h-[72%] w-[72%]" fill="none">
+        {/* receding rings, the Time Machine motif */}
+        <circle cx="24" cy="24" r="19" stroke="#fff" strokeOpacity="0.16" strokeWidth="1.6" />
+        <circle cx="24" cy="24" r="14.5" stroke="#fff" strokeOpacity="0.3" strokeWidth="1.6" />
+        <circle cx="24" cy="24" r="10" stroke="#fff" strokeOpacity="0.55" strokeWidth="1.8" />
+        {/* clock hands, wound backwards */}
+        <path d="M24 16.5V24l-5.4 3.6" stroke="#fff" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
+        <circle cx="24" cy="24" r="1.9" fill="#fff" />
+        {/* counter-clockwise arrow */}
+        <path d="M10.6 17.2A15.5 15.5 0 0 1 24 8.5" stroke="#8fd8ff" strokeWidth="2.2" strokeLinecap="round" />
+        <path d="M8.4 12.2l1.9 5.4 5.4-1.6" stroke="#8fd8ff" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+    </Tile>
+  );
+}
+
 export function GithubIcon() {
   return (
     <Tile from="#3a3f47" to="#101316">

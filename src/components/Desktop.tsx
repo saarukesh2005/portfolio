@@ -25,6 +25,7 @@ export default function Desktop() {
   const windows = useWindows((s) => s.windows);
   const focusedId = useWindows((s) => s.focusedId());
   const openApp = useWindows((s) => s.open);
+  const reflow = useWindows((s) => s.reflow);
 
   /*
    * Skip the boot animation if this tab has already seen it. Deferred to the
@@ -44,6 +45,22 @@ export default function Desktop() {
 
   // StrictMode mounts effects twice in dev; the welcome sequence must not double up
   const greeted = useRef(false);
+
+  /* keep windows inside the viewport when it changes size or orientation */
+  useEffect(() => {
+    let frame = 0;
+    const onResize = () => {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(() => reflow(window.innerWidth, window.innerHeight));
+    };
+    window.addEventListener("resize", onResize);
+    window.addEventListener("orientationchange", onResize);
+    return () => {
+      cancelAnimationFrame(frame);
+      window.removeEventListener("resize", onResize);
+      window.removeEventListener("orientationchange", onResize);
+    };
+  }, [reflow]);
 
   const finishBoot = useCallback(() => {
     setBooted(true);
