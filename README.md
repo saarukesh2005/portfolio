@@ -74,16 +74,24 @@ This keeps the PDF identical to what the site shows, so the two can't drift.
 
 ## Deploying
 
-The site is fully static — no env vars, no database.
+Live repo: **https://github.com/saarukesh2005/portfolio**
+
+The site is fully static — no env vars, no database, no build config needed.
+
+**First deploy** (one time, needs your Vercel login):
+
+1. Open <https://vercel.com/new> and sign in with GitHub.
+2. Pick `saarukesh2005/portfolio` → **Import** → **Deploy**. Vercel detects
+   Next.js and fills everything in; don't change any settings.
+
+**Every deploy after that** is just a push:
 
 ```bash
-git add -A && git commit -m "Portfolio"
-git remote add origin https://github.com/saarukesh2005/portfolio.git
-git push -u origin main
+git add -A && git commit -m "Update content" && git push
 ```
 
-Then import the repo at [vercel.com/new](https://vercel.com/new) and accept the
-defaults. Vercel detects Next.js on its own.
+Vercel rebuilds automatically. You'll get a `*.vercel.app` URL; a custom domain
+can be added later under the project's Domains tab.
 
 ## Adding things
 
