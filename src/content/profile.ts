@@ -18,11 +18,12 @@ export const profile = {
   email: "saarukesh.tn@gmail.com",
 
   /**
-   * Shown on the résumé window and in the Contact app.
-   * A public site is not the same as a résumé you hand to one employer —
-   * set this to "" if you would rather keep your number off the web.
+   * Deliberately empty: a public page gets crawled and scraped in a way a
+   * résumé emailed to one employer does not. The number is still in the
+   * downloadable résumé file, so anyone who actually wants it can get it.
+   * Put it back by filling this in — the résumé header picks it up again.
    */
-  phone: "+91 63747 68496",
+  phone: "",
 
   // Drop a square photo at public/avatar.jpg, then set this to "/avatar.jpg".
   // Left empty, the About window shows your initials.
