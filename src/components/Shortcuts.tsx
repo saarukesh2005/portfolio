@@ -28,6 +28,7 @@ const GROUPS: { title: string; rows: [string, string][] }[] = [
     title: "Desktop",
     rows: [
       ["Double-click icon", "Open it"],
+      ["Space", "Quick Look the selected icon"],
       ["Right-click", "Desktop menu"],
       ["⌘ P", "Print the résumé"],
     ],

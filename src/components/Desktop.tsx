@@ -13,6 +13,7 @@ import Notifications from "@/components/Notifications";
 import Launchpad from "@/components/Launchpad";
 import MissionControl from "@/components/MissionControl";
 import Shortcuts from "@/components/Shortcuts";
+import QuickLook from "@/components/QuickLook";
 import ControlCentre from "@/components/ControlCentre";
 import { useSystem, useWindows } from "@/lib/store";
 import { profile } from "@/content/profile";
@@ -119,6 +120,7 @@ export default function Desktop() {
           <Launchpad />
           <MissionControl />
           <Shortcuts />
+          <QuickLook />
           <ControlCentre />
           <ContextMenu />
           <Notifications />

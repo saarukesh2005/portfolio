@@ -280,6 +280,10 @@ type SystemStore = {
   shortcuts: boolean;
   setShortcuts: (v: boolean) => void;
 
+  /** appId being previewed with Quick Look, or null */
+  quickLook: string | null;
+  setQuickLook: (v: string | null) => void;
+
   controlCentre: boolean;
   setControlCentre: (v: boolean) => void;
 
@@ -354,6 +358,9 @@ export const useSystem = create<SystemStore>((set, get) => ({
 
   shortcuts: false,
   setShortcuts: (v) => set({ shortcuts: v }),
+
+  quickLook: null,
+  setQuickLook: (v) => set({ quickLook: v }),
 
   controlCentre: false,
   setControlCentre: (v) => set({ controlCentre: v }),

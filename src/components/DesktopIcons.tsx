@@ -2,12 +2,27 @@
 
 import { useEffect, useState } from "react";
 import { APPS } from "@/lib/apps";
-import { useWindows } from "@/lib/store";
+import { useSystem, useWindows } from "@/lib/store";
 
 export default function DesktopIcons() {
   const openApp = useWindows((s) => s.open);
+  const setQuickLook = useSystem((s) => s.setQuickLook);
   const [selected, setSelected] = useState<string | null>(null);
   const items = APPS.filter((a) => a.desktop);
+
+  /* space bar previews whatever is selected, as it does in Finder */
+  useEffect(() => {
+    if (!selected) return;
+    const onKey = (e: KeyboardEvent) => {
+      const tag = (e.target as HTMLElement | null)?.tagName;
+      if (e.key !== " " || tag === "INPUT" || tag === "TEXTAREA") return;
+      if (useSystem.getState().quickLook) return;
+      e.preventDefault();
+      setQuickLook(selected);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [selected, setQuickLook]);
 
   useEffect(() => {
     const clear = (e: MouseEvent) => {
@@ -32,7 +47,7 @@ export default function DesktopIcons() {
           data-desktop-icon
           onClick={() => setSelected(app.id)}
           onDoubleClick={() => launch(app.id)}
-          onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && launch(app.id)}
+          onKeyDown={(e) => e.key === "Enter" && launch(app.id)}
           className={`flex w-[88px] flex-col items-center gap-1 rounded-lg px-1.5 py-1.5 transition-colors ${
             selected === app.id ? "bg-white/22 ring-1 ring-white/35" : "hover:bg-white/10"
           }`}

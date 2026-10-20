@@ -40,6 +40,8 @@ export type AppDef = {
   id: string;
   /** shown in the menu bar, dock tooltip and window title */
   name: string;
+  /** one line, shown in Quick Look */
+  blurb: string;
   icon: ReactNode;
   Component?: ComponentType<{ payload?: unknown; active?: boolean }>;
   size: { w: number; h: number };
@@ -65,6 +67,7 @@ const ALL_APPS: AppDef[] = [
   {
     id: "about",
     name: "About Me",
+    blurb: "Bio, skills, certifications, experience and education.",
     icon: <LuffyIcon />,
     Component: AboutApp,
     size: { w: 840, h: 560 },
@@ -76,6 +79,7 @@ const ALL_APPS: AppDef[] = [
   {
     id: "projects",
     name: "Projects",
+    blurb: "Case studies, with the full write-up behind each one.",
     icon: <ProjectsIcon />,
     Component: ProjectsApp,
     size: { w: 900, h: 610 },
@@ -87,6 +91,7 @@ const ALL_APPS: AppDef[] = [
   {
     id: "terminal",
     name: "Terminal",
+    blurb: "A real shell. Type help.",
     icon: <TerminalIcon />,
     Component: TerminalApp,
     size: { w: 760, h: 480 },
@@ -103,6 +108,7 @@ const ALL_APPS: AppDef[] = [
   {
     id: "analyser",
     name: "Ratio Analyser",
+    blurb: "Enter a company's figures, get twelve ratios read back in plain English.",
     icon: <AnalyserIcon />,
     Component: AnalyserApp,
     size: { w: 960, h: 640 },
@@ -115,6 +121,7 @@ const ALL_APPS: AppDef[] = [
   {
     id: "numbers",
     name: "Numbers",
+    blurb: "Ratio tables and trend charts from the annual reports.",
     icon: <NumbersIcon />,
     Component: NumbersApp,
     size: { w: 880, h: 600 },
@@ -127,6 +134,7 @@ const ALL_APPS: AppDef[] = [
   {
     id: "timemachine",
     name: "Time Machine",
+    blurb: "Travel back through the milestones and see what was true at each point.",
     icon: <TimeMachineIcon />,
     Component: TimeMachineApp,
     size: { w: 860, h: 620 },
@@ -139,6 +147,7 @@ const ALL_APPS: AppDef[] = [
   {
     id: "calendar",
     name: "Calendar",
+    blurb: "The whole journey as a filterable timeline.",
     icon: <CalendarIcon />,
     Component: CalendarApp,
     size: { w: 760, h: 580 },
@@ -151,6 +160,7 @@ const ALL_APPS: AppDef[] = [
   {
     id: "photos",
     name: "Photos",
+    blurb: "Certificates and marksheets.",
     icon: <PhotosIcon />,
     Component: PhotosApp,
     size: { w: 820, h: 580 },
@@ -163,6 +173,7 @@ const ALL_APPS: AppDef[] = [
   {
     id: "resume",
     name: "Résumé",
+    blurb: "The full CV, rendered live. ⌘P prints it clean.",
     icon: <ResumeIcon />,
     Component: ResumeApp,
     size: { w: 780, h: 640 },
@@ -174,6 +185,7 @@ const ALL_APPS: AppDef[] = [
   {
     id: "crew",
     name: "Join my Crew",
+    blurb: "What I'm open to — hiring, study partners, research, or something you're building.",
     icon: <ShipIcon />,
     Component: CrewApp,
     size: { w: 780, h: 620 },
@@ -187,6 +199,7 @@ const ALL_APPS: AppDef[] = [
   {
     id: "mail",
     name: "Contact",
+    blurb: "A compose window that hands off to your own mail client.",
     icon: <MailIcon />,
     Component: MailApp,
     size: { w: 720, h: 540 },
@@ -202,6 +215,7 @@ const ALL_APPS: AppDef[] = [
   {
     id: "settings",
     name: "System Settings",
+    blurb: "Appearance, wallpapers and shortcuts.",
     icon: <SettingsIcon />,
     Component: SettingsApp,
     size: { w: 700, h: 520 },
@@ -214,6 +228,7 @@ const ALL_APPS: AppDef[] = [
   {
     id: "calculator",
     name: "Calculator",
+    blurb: "Does what it says, keyboard included.",
     icon: <CalculatorIcon />,
     Component: CalculatorApp,
     // 5 rows of square keys plus the display need this much, or the "=" row clips
@@ -227,6 +242,7 @@ const ALL_APPS: AppDef[] = [
   {
     id: "wanted",
     name: "Wanted",
+    blurb: "A bounty poster built from the actual CV. Purely for fun.",
     icon: <WantedIcon />,
     Component: WantedApp,
     size: { w: 500, h: 640 },
@@ -240,6 +256,7 @@ const ALL_APPS: AppDef[] = [
   {
     id: "github",
     name: "GitHub",
+    blurb: "Code, on GitHub.",
     icon: <GithubIcon />,
     size: { w: 0, h: 0 },
     dock: true,
@@ -250,6 +267,7 @@ const ALL_APPS: AppDef[] = [
   {
     id: "linkedin",
     name: "LinkedIn",
+    blurb: "The professional profile.",
     icon: <LinkedinIcon />,
     size: { w: 0, h: 0 },
     dock: true,

@@ -6,6 +6,7 @@ import { APPS } from "@/lib/apps";
 import { projects, profile } from "@/content/profile";
 import { WALLPAPERS, useSystem, useWindows } from "@/lib/store";
 import { Glyph } from "@/components/Icons";
+import { calculate } from "@/lib/calc";
 
 /** Impure by design — defined outside the component so render stays pure. */
 function shuffleWallpaper() {
@@ -163,6 +164,8 @@ export default function Spotlight() {
     }
   }
 
+  const calc = useMemo(() => calculate(q), [q]);
+
   const grouped = results.reduce<Record<string, Result[]>>((acc, r) => {
     (acc[r.kind] ||= []).push(r);
     return acc;
@@ -205,6 +208,27 @@ export default function Spotlight() {
               <kbd className="hidden rounded border border-white/18 px-1.5 py-0.5 font-mono text-[10.5px] text-white/50 sm:block">esc</kbd>
             </div>
 
+            {calc && (
+              <button
+                onClick={() => {
+                  navigator.clipboard?.writeText(calc.value.replace(/[₹,]/g, "").replace(" / month", ""));
+                  setOpen(false);
+                }}
+                className="flex w-full items-center gap-3 border-t border-white/10 px-4 py-3 text-left transition-colors hover:bg-white/6"
+              >
+                <span className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-[var(--accent)]/22 text-[15px] text-[var(--accent)]">
+                  =
+                </span>
+                <span className="min-w-0 flex-1">
+                  <span className="block truncate text-[20px] font-medium tabular-nums text-white">{calc.value}</span>
+                  <span className="block truncate text-[12px] text-white/45">{calc.reading}</span>
+                </span>
+                <span className="shrink-0 rounded border border-white/18 px-1.5 py-0.5 font-mono text-[10px] text-white/45">
+                  copy
+                </span>
+              </button>
+            )}
+
             {results.length > 0 && (
               <div className="mac-scroll max-h-[46vh] overflow-y-auto border-t border-white/10 p-1.5">
                 {Object.entries(grouped).map(([kind, rows]) => (
@@ -239,9 +263,15 @@ export default function Spotlight() {
               </div>
             )}
 
-            {q.trim() && results.length === 0 && (
+            {q.trim() && results.length === 0 && !calc && (
               <p className="border-t border-white/10 px-4 py-7 text-center text-[13.5px] text-white/45">
                 No results for “{q}”
+              </p>
+            )}
+
+            {!q.trim() && (
+              <p className="border-t border-white/10 px-4 py-2.5 text-center font-mono text-[11px] text-white/30">
+                also does maths — try 2500*1.12 · 15% of 48000 · cagr 100 250 5 · emi 500000 9 20 · sip 5000 12 10
               </p>
             )}
           </motion.div>
