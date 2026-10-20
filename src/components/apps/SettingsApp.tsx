@@ -1,0 +1,67 @@
+"use client";
+
+import { WALLPAPERS, useSystem } from "@/lib/store";
+
+export default function SettingsApp() {
+  const wallpaperId = useSystem((s) => s.wallpaperId);
+  const setWallpaper = useSystem((s) => s.setWallpaper);
+  const appearance = useSystem((s) => s.appearance);
+  const apply = useSystem((s) => s.setAppearance);
+
+  return (
+    <div className="mac-scroll h-full overflow-y-auto p-6">
+      <h1 className="mb-5 text-[20px] font-semibold tracking-[-0.02em]">Appearance</h1>
+
+      <div className="mb-8 flex gap-3">
+        {(["dark", "light"] as const).map((mode) => (
+          <button
+            key={mode}
+            onClick={() => apply(mode)}
+            className={`flex-1 rounded-xl border-2 p-2 transition-colors ${
+              appearance === mode ? "border-[var(--accent)]" : "border-transparent hover:border-[var(--fill-3)]"
+            }`}
+          >
+            <div
+              className="mb-2 h-16 rounded-lg border border-black/20"
+              style={{ background: mode === "dark" ? "linear-gradient(160deg,#2a2f3a,#12151c)" : "linear-gradient(160deg,#ffffff,#d9dee8)" }}
+            />
+            <span className="text-[12.5px] capitalize">{mode}</span>
+          </button>
+        ))}
+      </div>
+
+      <h2 className="mb-4 text-[20px] font-semibold tracking-[-0.02em]">Wallpaper</h2>
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+        {WALLPAPERS.map((w) => (
+          <button
+            key={w.id}
+            onClick={() => setWallpaper(w.id)}
+            className={`rounded-xl border-2 p-1.5 text-left transition-colors ${
+              wallpaperId === w.id ? "border-[var(--accent)]" : "border-transparent hover:border-[var(--fill-3)]"
+            }`}
+          >
+            <div className="mb-1.5 h-[72px] rounded-lg border border-black/25 shadow-inner" style={{ backgroundImage: w.css, backgroundSize: "cover", backgroundPosition: "center" }} />
+            <span className="block truncate px-0.5 text-[12px] text-mid">{w.name}</span>
+          </button>
+        ))}
+      </div>
+
+      <h2 className="mb-3 mt-8 text-[20px] font-semibold tracking-[-0.02em]">Keyboard</h2>
+      <div className="overflow-hidden rounded-xl border border-[var(--glass-stroke)]">
+        {[
+          ["⌘ K", "Open Spotlight search"],
+          ["⌘ W", "Close the focused window"],
+          ["⌘ M", "Minimise the focused window"],
+          ["Esc", "Dismiss Spotlight or a menu"],
+          ["Double-click", "Open a desktop icon"],
+          ["Right-click", "Desktop context menu"],
+        ].map(([k, v], i) => (
+          <div key={k} className={`flex items-center gap-4 px-3.5 py-2.5 ${i % 2 ? "bg-[var(--fill-1)]" : ""}`}>
+            <kbd className="min-w-[88px] rounded-md border border-[var(--glass-stroke)] bg-[var(--fill-2)] px-2 py-0.5 text-center font-mono text-[11.5px]">{k}</kbd>
+            <span className="text-[13px] text-mid">{v}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
