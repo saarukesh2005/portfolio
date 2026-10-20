@@ -172,7 +172,7 @@ export default function Window({ win, active }: { win: WindowInstance; active: b
         style={{ background: "var(--win-chrome)" }}
       >
         {/* traffic lights */}
-        <div className="flex items-center gap-[7px]" data-no-drag>
+        <div className="flex items-center gap-[13px] sm:gap-[7px]" data-no-drag>
           <TrafficLight color="#ff5f57" ring="#e0443e" label="Close" onClick={doClose} active={active} glyph="×" />
           <TrafficLight color="#febc2e" ring="#dea123" label="Minimise" onClick={doMinimize} active={active} glyph="−" />
           <TrafficLight color="#28c840" ring="#1dad2b" label="Zoom" onClick={doZoom} active={active} glyph="+" />
@@ -222,7 +222,12 @@ function TrafficLight({
       aria-label={label}
       title={label}
       onClick={onClick}
-      className="grid h-[12px] w-[12px] place-items-center rounded-full text-[9px] font-bold leading-none transition-colors"
+      /*
+       * The dot stays small, but `before` stretches the tappable area to the
+       * full height of the title bar and past the dot on both sides — 12px is
+       * nowhere near a usable touch target on a phone.
+       */
+      className="relative grid h-[15px] w-[15px] place-items-center rounded-full text-[10px] font-bold leading-none transition-colors before:absolute before:-inset-x-[7px] before:-inset-y-3 before:content-[''] sm:h-[12px] sm:w-[12px] sm:text-[9px] sm:before:-inset-x-0.5 sm:before:-inset-y-1.5"
       style={{
         background: active ? color : "var(--light-off)",
         boxShadow: `inset 0 0 0 .5px ${active ? ring : "transparent"}`,

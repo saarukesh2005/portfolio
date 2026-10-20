@@ -78,11 +78,12 @@ export default function ControlCentre() {
             </div>
           </div>
 
-          <div className="grid grid-cols-3 gap-2">
+          <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
             {[
-              { label: "Launchpad", glyph: "⌘", run: () => setLaunchpad(true) },
-              { label: "Windows", glyph: "▦", run: () => setMissionControl(true) },
-              { label: "Keys", glyph: "⌨", run: () => setShortcuts(true) },
+              { label: "Launchpad", glyph: "⌘", run: () => setLaunchpad(true), desktopOnly: false },
+              { label: "Windows", glyph: "▦", run: () => setMissionControl(true), desktopOnly: false },
+              // a list of keyboard shortcuts is no use on a device without one
+              { label: "Keys", glyph: "⌨", run: () => setShortcuts(true), desktopOnly: true },
             ].map((b) => (
               <button
                 key={b.label}
@@ -90,7 +91,9 @@ export default function ControlCentre() {
                   setOpen(false);
                   b.run();
                 }}
-                className="rounded-xl border border-white/10 bg-white/8 px-2 py-2.5 text-[11.5px] text-white/75 transition-colors hover:bg-white/14"
+                className={`rounded-xl border border-white/10 bg-white/8 px-2 py-2.5 text-[11.5px] text-white/75 transition-colors hover:bg-white/14 ${
+                  b.desktopOnly ? "hidden sm:block" : ""
+                }`}
               >
                 <span className="mb-1 block text-[15px]">{b.glyph}</span>
                 {b.label}
