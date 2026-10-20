@@ -18,8 +18,7 @@ export default function PhotosApp() {
             anything a recruiter would rather see than read about.
           </p>
           <p className="mt-4 text-[12.5px] leading-relaxed text-lo">
-            Drop the files in <code className="font-mono text-[12px]">public/certificates/</code>, then
-            add one entry each in <code className="font-mono text-[12px]">src/content/gallery.ts</code>.
+            Every certification is listed in About in the meantime.
           </p>
         </div>
       </div>

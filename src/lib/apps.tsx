@@ -28,6 +28,8 @@ import {
   WantedIcon,
 } from "@/components/Icons";
 import { profile } from "@/content/profile";
+import { financials } from "@/content/financials";
+import { gallery } from "@/content/gallery";
 
 export type AppDef = {
   id: string;
@@ -54,7 +56,7 @@ const EDIT_MENU = { label: "Edit", items: ["Undo  ⌘Z", "Redo  ⇧⌘Z", "---",
 const VIEW_MENU = { label: "View", items: ["Enter Full Screen  ⌃⌘F"] };
 const WINDOW_MENU = { label: "Window", items: ["Minimise  ⌘M", "Zoom", "---", "Bring All to Front"] };
 
-export const APPS: AppDef[] = [
+const ALL_APPS: AppDef[] = [
   {
     id: "about",
     name: "About Me",
@@ -214,5 +216,18 @@ export const APPS: AppDef[] = [
     keywords: ["linkedin", "hire", "network", "cv"],
   },
 ];
+
+/**
+ * An app with nothing in it is worse than no app at all — a visitor clicking
+ * an empty window learns only that the site is unfinished. Numbers and Photos
+ * stay hidden until their content files have something in them, and appear
+ * on their own once they do.
+ */
+const EMPTY: Record<string, boolean> = {
+  numbers: financials === null,
+  photos: gallery.length === 0,
+};
+
+export const APPS: AppDef[] = ALL_APPS.filter((a) => !EMPTY[a.id]);
 
 export const appById = (id: string) => APPS.find((a) => a.id === id);

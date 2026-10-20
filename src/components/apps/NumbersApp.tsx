@@ -18,8 +18,7 @@ export default function NumbersApp() {
             this window puts them on screen as a spreadsheet with trend charts.
           </p>
           <p className="mt-4 text-[12.5px] leading-relaxed text-lo">
-            Open <code className="font-mono text-[12px]">src/content/financials.ts</code>. The ratio
-            rows are already laid out; you mostly just type the numbers.
+            The full write-up is in Projects in the meantime.
           </p>
         </div>
       </div>
