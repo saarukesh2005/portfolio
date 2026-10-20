@@ -373,6 +373,19 @@ export function ToolkitIcon() {
   );
 }
 
+export function DebtIcon() {
+  return (
+    <Tile from="#8ee9a4" to="#17794a">
+      <svg viewBox="0 0 48 48" className="relative h-[62%] w-[62%]" fill="none" stroke="#fff" strokeWidth="3.2" strokeLinecap="round" strokeLinejoin="round">
+        {/* a chain link, broken */}
+        <path d="M20 15.5l-4.5-4.5a7 7 0 0 0-9.9 9.9l4.5 4.5" />
+        <path d="M28 32.5l4.5 4.5a7 7 0 0 0 9.9-9.9L37.9 22.6" />
+        <path d="M31 11.5l3-5M38.5 17l5-3M14.5 36.5l-3 5M7.5 31l-5 3" strokeOpacity="0.55" strokeWidth="2.6" />
+      </svg>
+    </Tile>
+  );
+}
+
 export function GithubIcon() {
   return (
     <Tile from="#3a3f47" to="#101316">

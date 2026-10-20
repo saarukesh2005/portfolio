@@ -38,6 +38,7 @@
   ],
   "exclude": [
     "node_modules",
-    "src/lib/finance.test.ts"
+    "src/lib/finance.test.ts",
+    "src/lib/debt.test.ts"
   ]
 }

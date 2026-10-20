@@ -11,6 +11,7 @@ import CrewApp from "@/components/apps/CrewApp";
 import AnalyserApp from "@/components/apps/AnalyserApp";
 import TimeMachineApp from "@/components/apps/TimeMachineApp";
 import ToolkitApp from "@/components/apps/ToolkitApp";
+import DebtEscapeApp from "@/components/apps/DebtEscapeApp";
 import CalendarApp from "@/components/apps/CalendarApp";
 import NumbersApp from "@/components/apps/NumbersApp";
 import PhotosApp from "@/components/apps/PhotosApp";
@@ -26,6 +27,7 @@ import {
   AnalyserIcon,
   TimeMachineIcon,
   ToolkitIcon,
+  DebtIcon,
   SettingsIcon,
   GithubIcon,
   LinkedinIcon,
@@ -131,6 +133,19 @@ const ALL_APPS: AppDef[] = [
     secondaryDock: true,
     desktop: false,
     keywords: ["numbers", "spreadsheet", "ratios", "financials", "analysis", "bdl", "charts", "excel"],
+    menus: [FILE_MENU, EDIT_MENU, VIEW_MENU, WINDOW_MENU],
+  },
+  {
+    id: "debt",
+    name: "Debt Escape",
+    blurb: "Plan a way out of multiple debts — which first, how long, and what a pay cut would do.",
+    icon: <DebtIcon />,
+    Component: DebtEscapeApp,
+    size: { w: 980, h: 660 },
+    dock: true,
+    secondaryDock: true,
+    desktop: true,
+    keywords: ["debt", "escape", "loan", "emi", "payoff", "avalanche", "snowball", "repayment", "credit card", "cash flow", "rescue"],
     menus: [FILE_MENU, EDIT_MENU, VIEW_MENU, WINDOW_MENU],
   },
   {

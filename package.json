@@ -7,7 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "test:finance": "tsx src/lib/finance.test.ts"
+    "test:finance": "tsx src/lib/finance.test.ts",
+    "test:debt": "tsx src/lib/debt.test.ts",
+    "test": "npm run test:finance && npm run test:debt"
   },
   "dependencies": {
     "motion": "^14.4.0",
