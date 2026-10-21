@@ -12,6 +12,7 @@ import AnalyserApp from "@/components/apps/AnalyserApp";
 import TimeMachineApp from "@/components/apps/TimeMachineApp";
 import ToolkitApp from "@/components/apps/ToolkitApp";
 import DebtEscapeApp from "@/components/apps/DebtEscapeApp";
+import ResearchApp from "@/components/apps/ResearchApp";
 import CalendarApp from "@/components/apps/CalendarApp";
 import NumbersApp from "@/components/apps/NumbersApp";
 import PhotosApp from "@/components/apps/PhotosApp";
@@ -28,6 +29,7 @@ import {
   TimeMachineIcon,
   ToolkitIcon,
   DebtIcon,
+  ResearchIcon,
   SettingsIcon,
   GithubIcon,
   LinkedinIcon,
@@ -108,6 +110,19 @@ const ALL_APPS: AppDef[] = [
       { label: "View", items: ["Clear Buffer  ⌘L"] },
       WINDOW_MENU,
     ],
+  },
+  {
+    id: "research",
+    name: "Research",
+    blurb: "Equity research notes and company write-ups — the reasoning, not just the conclusion.",
+    icon: <ResearchIcon />,
+    Component: ResearchApp,
+    size: { w: 880, h: 660 },
+    dock: true,
+    secondaryDock: true,
+    desktop: true,
+    keywords: ["research", "equity", "notes", "blog", "writing", "reports", "analysis", "posts", "articles"],
+    menus: [FILE_MENU, EDIT_MENU, VIEW_MENU, WINDOW_MENU],
   },
   {
     id: "analyser",

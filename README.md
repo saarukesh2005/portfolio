@@ -40,6 +40,7 @@ Everything is data-driven. You should never need to touch a component.
 | `src/content/profile.ts` | Name, bio, socials, skills, certifications, projects, experience, education, volunteering, **timeline** |
 | `src/content/financials.ts` | The Numbers app's tables. Currently `null` — fill it from your BDL spreadsheet |
 | `src/content/gallery.ts` | The Photos app's certificates |
+| `src/content/research.ts` | Equity research notes, written in Markdown |
 
 Optional files:
 
@@ -47,6 +48,38 @@ Optional files:
   Left empty, About shows your initials.
 - `public/certificates/*` — the images `gallery.ts` points at.
 - `public/resume.pdf` — see **Producing the PDF** below.
+
+## Writing a research note
+
+Add an entry to `src/content/research.ts`. The body is Markdown inside a
+template literal — headings, lists, **tables**, links and quotes all render, and
+tables right-align their figures automatically.
+
+```ts
+{
+  slug: "bdl-fy25",
+  title: "Bharat Dynamics — five years on",
+  subject: "Bharat Dynamics Ltd.",
+  ticker: "NSE: BDL",
+  date: "2026-12-01",
+  summary: "One or two sentences, shown in the list.",
+  tags: ["Defence", "PSU", "Ratio Analysis"],
+  draft: true,            // visible on localhost, hidden on the live site
+  body: `
+## The question
+...
+`,
+}
+```
+
+`draft: true` lets you see a note locally before anyone else does. The whole
+Research app stays hidden until at least one note is published, so an empty
+section never appears to a visitor.
+
+Every note carries the same disclaimer automatically — it is part of the app,
+not something to remember. Issuing buy/sell calls publicly is regulated in India
+under the SEBI Research Analyst Regulations, which is what NISM Series XV covers,
+so until that is in hand the framing is analysis rather than a call to act.
 
 ## Producing the PDF
 

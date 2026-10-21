@@ -1,5 +1,6 @@
 import { financials } from "@/content/financials";
 import { gallery } from "@/content/gallery";
+import { publishedResearch } from "@/content/research";
 
 /**
  * Apps whose content file is still empty. They are kept out of the dock,
@@ -12,4 +13,5 @@ import { gallery } from "@/content/gallery";
 export const HIDDEN_APPS: ReadonlySet<string> = new Set<string>([
   ...(financials === null ? ["numbers"] : []),
   ...(gallery.length === 0 ? ["photos"] : []),
+  ...(publishedResearch().length === 0 ? ["research"] : []),
 ]);

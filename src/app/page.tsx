@@ -1,5 +1,6 @@
 import Desktop from "@/components/Desktop";
 import { profile, projects, certifications, experience, education } from "@/content/profile";
+import { publishedResearch } from "@/content/research";
 
 /**
  * The desktop is a client-side canvas, so the real content also ships as
@@ -56,6 +57,15 @@ function SeoContent() {
                 <li key={i}>{pt}</li>
               ))}
             </ul>
+          </li>
+        ))}
+      </ul>
+      <h2>Research</h2>
+      <ul>
+        {publishedResearch().map((n) => (
+          <li key={n.slug}>
+            <h3>{n.title}</h3>
+            <p>{n.summary}</p>
           </li>
         ))}
       </ul>

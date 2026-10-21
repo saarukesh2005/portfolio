@@ -386,6 +386,22 @@ export function DebtIcon() {
   );
 }
 
+export function ResearchIcon() {
+  return (
+    <Tile from="#fdfdfb" to="#d6d9e0">
+      <svg viewBox="0 0 48 48" className="relative h-[66%] w-[66%]">
+        {/* a page of ruled notes with a rising line over it */}
+        <rect x="9" y="5" width="30" height="38" rx="3" fill="#fff" stroke="#9aa3b2" strokeWidth="1.5" />
+        <g stroke="#c3cad6" strokeWidth="1.8" strokeLinecap="round">
+          <path d="M14.5 12.5h19M14.5 17.5h19M14.5 34h12M14.5 38.5h8" />
+        </g>
+        <path d="M14.5 29.5l6-6.5 5 4 8.5-9.5" fill="none" stroke="#1f9e46" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
+        <path d="M30 17.5h4.5V22" fill="none" stroke="#1f9e46" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+    </Tile>
+  );
+}
+
 export function GithubIcon() {
   return (
     <Tile from="#3a3f47" to="#101316">
