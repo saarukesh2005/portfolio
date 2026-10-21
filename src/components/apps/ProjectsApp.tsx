@@ -64,8 +64,18 @@ export default function ProjectsApp({ payload }: { payload?: unknown }) {
   );
 }
 
-function Thumb({ project, className = "" }: { project: Project; className?: string }) {
+function Thumb({
+  project,
+  className = "",
+  hero,
+}: {
+  project: Project;
+  className?: string;
+  /** the detail header — bigger glyph, and a fade so it meets the text rather than cutting against it */
+  hero?: boolean;
+}) {
   const [failed, setFailed] = useState(false);
+
   if (project.image && !failed) {
     return (
       <div className={`relative w-full overflow-hidden ${className}`}>
@@ -76,12 +86,27 @@ function Thumb({ project, className = "" }: { project: Project; className?: stri
           onError={() => setFailed(true)}
           className="object-cover transition-transform duration-300 group-hover:scale-[1.03]"
         />
+        {hero && <span aria-hidden className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-[var(--win-bg)] to-transparent" />}
       </div>
     );
   }
+
   return (
-    <div className={`grid w-full place-items-center bg-gradient-to-br ${project.accent} ${className}`}>
-      <span className="text-[40px] drop-shadow-lg transition-transform duration-300 group-hover:scale-110">{project.emoji}</span>
+    <div className={`relative grid w-full place-items-center overflow-hidden bg-gradient-to-br ${project.accent} ${className}`}>
+      {/* a flat panel reads as unfinished; this gives the colour some shape */}
+      <span
+        aria-hidden
+        className="pointer-events-none absolute inset-0"
+        style={{ background: "radial-gradient(70% 90% at 50% 25%, rgba(255,255,255,.22), transparent 70%)" }}
+      />
+      <span
+        className={`relative drop-shadow-lg transition-transform duration-300 group-hover:scale-110 ${
+          hero ? "text-[64px]" : "text-[40px]"
+        }`}
+      >
+        {project.emoji}
+      </span>
+      {hero && <span aria-hidden className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-[var(--win-bg)] to-transparent" />}
     </div>
   );
 }
@@ -104,14 +129,15 @@ function Detail({ project, onBack }: { project: Project; onBack: () => void }) {
         </button>
       </div>
 
-      <Thumb project={project} className="h-[190px]" />
+      <Thumb project={project} hero className="h-[168px]" />
 
-      <div className="mx-auto max-w-[62ch] p-6">
-        <div className="flex flex-wrap items-baseline justify-between gap-x-3">
-          <h1 className="text-[24px] font-semibold tracking-[-0.02em]">{project.name}</h1>
-          <span className="font-mono text-[12px] text-lo">{project.year}</span>
-        </div>
-        <p className="mt-1.5 text-[14px] text-mid">{project.blurb}</p>
+      <article className="mx-auto max-w-[64ch] px-6 pb-8 pt-1">
+        {/* the year reads as a kicker above the title; floated opposite it, it
+            just hung at the far edge of the measure with nothing to anchor it */}
+        <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-lo">{project.year}</p>
+        <h1 className="mt-1.5 text-[25px] font-semibold leading-tight tracking-[-0.02em]">{project.name}</h1>
+
+        <p className="mt-2.5 text-[15.5px] leading-[1.6] text-mid">{project.blurb}</p>
 
         <div className="mt-4 flex flex-wrap gap-1.5">
           {project.tags.map((t) => (
@@ -121,9 +147,11 @@ function Detail({ project, onBack }: { project: Project; onBack: () => void }) {
           ))}
         </div>
 
-        <div className="mt-6 space-y-3.5">
+        <hr className="my-6 border-0 border-t border-[var(--glass-stroke)]" />
+
+        <div className="space-y-4">
           {project.description.map((d, i) => (
-            <p key={i} className="text-[14px] leading-[1.75] text-mid">
+            <p key={i} className="text-[14px] leading-[1.8] text-mid">
               {d}
             </p>
           ))}
@@ -137,7 +165,7 @@ function Detail({ project, onBack }: { project: Project; onBack: () => void }) {
         )}
 
         {(project.live || project.repo) && (
-          <div className="mt-7 flex flex-wrap gap-2.5">
+          <div className="mt-6 flex flex-wrap gap-2.5">
             {project.live && (
               <a
                 href={project.live}
@@ -160,7 +188,7 @@ function Detail({ project, onBack }: { project: Project; onBack: () => void }) {
             )}
           </div>
         )}
-      </div>
+      </article>
     </div>
   );
 }
