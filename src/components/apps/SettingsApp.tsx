@@ -6,6 +6,8 @@ export default function SettingsApp() {
   const wallpaperId = useSystem((s) => s.wallpaperId);
   const setWallpaper = useSystem((s) => s.setWallpaper);
   const appearance = useSystem((s) => s.appearance);
+  const dockLabels = useSystem((s) => s.dockLabels);
+  const setDockLabels = useSystem((s) => s.setDockLabels);
   const apply = useSystem((s) => s.setAppearance);
 
   return (
@@ -29,6 +31,23 @@ export default function SettingsApp() {
           </button>
         ))}
       </div>
+
+      <h2 className="mb-3 text-[20px] font-semibold tracking-[-0.02em]">Dock</h2>
+      <label className="mb-8 flex items-center justify-between gap-4 rounded-xl border border-[var(--glass-stroke)] bg-[var(--fill-1)] px-3.5 py-3">
+        <span>
+          <span className="block text-[13.5px]">Show app names</span>
+          <span className="block text-[12px] text-lo">
+            Names sit under each icon. Turning this off makes the icons larger, with the name on hover.
+          </span>
+        </span>
+        <input
+          type="checkbox"
+          checked={dockLabels}
+          onChange={(e) => setDockLabels(e.target.checked)}
+          aria-label="Show app names in the Dock"
+          className="h-4 w-4 shrink-0 accent-[var(--accent)]"
+        />
+      </label>
 
       <h2 className="mb-4 text-[20px] font-semibold tracking-[-0.02em]">Wallpaper</h2>
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">

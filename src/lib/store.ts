@@ -20,7 +20,8 @@ export type WindowInstance = Rect & {
 export const MENUBAR_H = 28;
 const MIN_W = 360;
 const MIN_H = 240;
-export const DOCK_RESERVE = 96;
+/* clearance kept under the dock; sized for the taller labelled dock */
+export const DOCK_RESERVE = 104;
 
 type OpenOptions = {
   payload?: unknown;
@@ -284,6 +285,10 @@ type SystemStore = {
   quickLook: string | null;
   setQuickLook: (v: string | null) => void;
 
+  /** show app names under the dock icons */
+  dockLabels: boolean;
+  setDockLabels: (v: boolean) => void;
+
   controlCentre: boolean;
   setControlCentre: (v: boolean) => void;
 
@@ -306,6 +311,15 @@ let toastSeq = 0;
 function initialAppearance(): Appearance {
   if (typeof document === "undefined") return "dark";
   return document.documentElement.getAttribute("data-appearance") === "light" ? "light" : "dark";
+}
+
+function initialDockLabels(): boolean {
+  if (typeof localStorage === "undefined") return true;
+  try {
+    return localStorage.getItem("dockLabels") !== "0";
+  } catch {
+    return true;
+  }
 }
 
 function initialWallpaper(): string {
@@ -361,6 +375,16 @@ export const useSystem = create<SystemStore>((set, get) => ({
 
   quickLook: null,
   setQuickLook: (v) => set({ quickLook: v }),
+
+  dockLabels: initialDockLabels(),
+  setDockLabels: (v) => {
+    try {
+      localStorage.setItem("dockLabels", v ? "1" : "0");
+    } catch {
+      /* private browsing — the choice just won't survive a reload */
+    }
+    set({ dockLabels: v });
+  },
 
   controlCentre: false,
   setControlCentre: (v) => set({ controlCentre: v }),

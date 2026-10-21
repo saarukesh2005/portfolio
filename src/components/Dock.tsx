@@ -6,8 +6,13 @@ import { APPS, appById } from "@/lib/apps";
 import { LaunchpadIcon } from "@/components/Icons";
 import { useSystem, useWindows } from "@/lib/store";
 
-const BASE = 50;
-const PEAK = 80;
+/* Labelled icons have to be smaller, or eighteen of them do not fit on a
+   laptop screen at all. The tooltip still carries the full name, since the
+   label itself truncates. */
+const SIZES = {
+  labelled: { base: 40, peak: 62, width: 60 },
+  plain: { base: 50, peak: 80, width: 0 },
+};
 const RANGE = 130;
 
 export default function Dock() {
@@ -16,6 +21,8 @@ export default function Dock() {
   const openApp = useWindows((s) => s.open);
   const restore = useWindows((s) => s.restore);
   const setLaunchpad = useSystem((s) => s.setLaunchpad);
+  const labelled = useSystem((s) => s.dockLabels);
+  const size = labelled ? SIZES.labelled : SIZES.plain;
 
   const minimized = windows.filter((w) => w.minimized);
   const pinned = APPS.filter((a) => a.dock);
@@ -25,7 +32,9 @@ export default function Dock() {
       <motion.div
         onMouseMove={(e) => mouseX.set(e.clientX)}
         onMouseLeave={() => mouseX.set(Infinity)}
-        className="pointer-events-auto flex max-w-[calc(100vw-16px)] items-end gap-1.5 overflow-x-auto rounded-[20px] border border-white/14 px-2.5 pb-1.5 pt-1.5"
+        className={`pointer-events-auto flex max-w-[calc(100vw-16px)] items-end gap-1.5 overflow-x-auto rounded-[20px] border border-white/14 px-2.5 pt-1.5 ${
+          labelled ? "pb-2.5" : "pb-1.5"
+        }`}
         style={{
           background: "rgba(255,255,255,.14)",
           backdropFilter: "blur(28px) saturate(180%)",
@@ -40,6 +49,7 @@ export default function Dock() {
             label="Launchpad"
             icon={<LaunchpadIcon />}
             running={false}
+            size={size}
             onClick={() => setLaunchpad(true)}
           />
         </div>
@@ -51,6 +61,7 @@ export default function Dock() {
             label={app.name}
             icon={app.icon}
             running={windows.some((w) => w.appId === app.id)}
+            size={size}
             /* link shortcuts would overflow a phone dock; they live in About and Contact too */
             hideOnMobile={Boolean(app.href) || Boolean(app.secondaryDock)}
             onClick={() => {
@@ -68,7 +79,7 @@ export default function Dock() {
             if (!app) return null;
             return (
               <motion.div key={w.id} initial={{ scale: 0.4, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.4, opacity: 0 }}>
-                <DockItem mouseX={mouseX} label={`${app.name} — minimised`} icon={app.icon} running onClick={() => restore(w.id)} dim />
+                <DockItem mouseX={mouseX} label={app.name} caption="minimised" icon={app.icon} running size={size} onClick={() => restore(w.id)} dim />
               </motion.div>
             );
           })}
@@ -86,6 +97,8 @@ function DockItem({
   onClick,
   dim,
   hideOnMobile,
+  size,
+  caption,
 }: {
   mouseX: MotionValue<number>;
   icon: React.ReactNode;
@@ -94,6 +107,8 @@ function DockItem({
   onClick: () => void;
   dim?: boolean;
   hideOnMobile?: boolean;
+  size: { base: number; peak: number; width: number };
+  caption?: string;
 }) {
   const ref = useRef<HTMLButtonElement>(null);
   const [hover, setHover] = useState(false);
@@ -105,11 +120,14 @@ function DockItem({
     return v - (b.left + b.width / 2);
   });
 
-  const sizeRaw = useTransform(distance, [-RANGE, 0, RANGE], [BASE, PEAK, BASE], { clamp: true });
-  const size = useSpring(sizeRaw, { mass: 0.09, stiffness: 190, damping: 14 });
+  const sizeRaw = useTransform(distance, [-RANGE, 0, RANGE], [size.base, size.peak, size.base], { clamp: true });
+  const px = useSpring(sizeRaw, { mass: 0.09, stiffness: 190, damping: 14 });
 
   return (
-    <div className={`relative flex-col items-center ${hideOnMobile ? "hidden sm:flex" : "flex"}`}>
+    <div
+      className={`relative flex-col items-center ${hideOnMobile ? "hidden sm:flex" : "flex"}`}
+      style={size.width > 0 ? { width: size.width } : undefined}
+    >
       <AnimatePresence>
         {hover && (
           <motion.span
@@ -117,17 +135,18 @@ function DockItem({
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 6, scale: 0.9 }}
             transition={{ duration: 0.13 }}
-            className="pointer-events-none absolute -top-9 whitespace-nowrap rounded-md border border-white/14 px-2 py-1 text-[12px] text-white"
+            className="pointer-events-none absolute -top-9 z-10 whitespace-nowrap rounded-md border border-white/14 px-2 py-1 text-[12px] text-white"
             style={{ background: "rgba(40,42,50,.9)", backdropFilter: "blur(20px)" }}
           >
             {label}
+            {caption && <span className="text-white/50"> — {caption}</span>}
           </motion.span>
         )}
       </AnimatePresence>
 
       <motion.button
         ref={ref}
-        style={{ width: size, height: size }}
+        style={{ width: px, height: px }}
         onMouseEnter={() => setHover(true)}
         onMouseLeave={() => setHover(false)}
         onClick={() => {
@@ -141,7 +160,20 @@ function DockItem({
         {icon}
       </motion.button>
 
-      <span className={`mt-[3px] h-[3px] w-[3px] rounded-full bg-white/85 ${running ? "opacity-100" : "opacity-0"}`} />
+      {size.width > 0 && (
+        <span
+          className="mt-[4px] w-full truncate text-center text-[9.5px] leading-[1.15] text-white [text-shadow:0_1px_2px_rgba(0,0,0,.85)]"
+          style={{ maxWidth: size.width }}
+        >
+          {label}
+        </span>
+      )}
+
+      <span
+        className={`h-[3px] w-[3px] rounded-full bg-white/85 ${size.width > 0 ? "mt-[2px]" : "mt-[3px]"} ${
+          running ? "opacity-100" : "opacity-0"
+        }`}
+      />
     </div>
   );
 }
