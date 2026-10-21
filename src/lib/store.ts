@@ -289,6 +289,11 @@ type SystemStore = {
   dockLabels: boolean;
   setDockLabels: (v: boolean) => void;
 
+  /** where the user has dragged each desktop icon; unset means "use the grid" */
+  iconPositions: Record<string, { x: number; y: number }>;
+  setIconPosition: (id: string, x: number, y: number) => void;
+  resetIconPositions: () => void;
+
   controlCentre: boolean;
   setControlCentre: (v: boolean) => void;
 
@@ -311,6 +316,24 @@ let toastSeq = 0;
 function initialAppearance(): Appearance {
   if (typeof document === "undefined") return "dark";
   return document.documentElement.getAttribute("data-appearance") === "light" ? "light" : "dark";
+}
+
+function initialIconPositions(): Record<string, { x: number; y: number }> {
+  if (typeof localStorage === "undefined") return {};
+  try {
+    const raw = localStorage.getItem("iconPositions");
+    const parsed = raw ? JSON.parse(raw) : {};
+    // never trust what came back out of storage
+    if (!parsed || typeof parsed !== "object") return {};
+    const clean: Record<string, { x: number; y: number }> = {};
+    for (const [k, v] of Object.entries(parsed as Record<string, unknown>)) {
+      const pos = v as { x?: unknown; y?: unknown };
+      if (typeof pos?.x === "number" && typeof pos?.y === "number") clean[k] = { x: pos.x, y: pos.y };
+    }
+    return clean;
+  } catch {
+    return {};
+  }
 }
 
 function initialDockLabels(): boolean {
@@ -375,6 +398,24 @@ export const useSystem = create<SystemStore>((set, get) => ({
 
   quickLook: null,
   setQuickLook: (v) => set({ quickLook: v }),
+
+  iconPositions: initialIconPositions(),
+  setIconPosition: (id, x, y) =>
+    set((s) => {
+      const next = { ...s.iconPositions, [id]: { x, y } };
+      try {
+        localStorage.setItem("iconPositions", JSON.stringify(next));
+      } catch {
+        /* private browsing — the arrangement just won't survive a reload */
+      }
+      return { iconPositions: next };
+    }),
+  resetIconPositions: () => {
+    try {
+      localStorage.removeItem("iconPositions");
+    } catch {}
+    set({ iconPositions: {} });
+  },
 
   dockLabels: initialDockLabels(),
   setDockLabels: (v) => {

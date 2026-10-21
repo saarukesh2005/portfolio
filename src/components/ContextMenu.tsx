@@ -43,6 +43,7 @@ export default function ContextMenu() {
     { label: "Launchpad", hint: "F4", run: () => useSystem.getState().setLaunchpad(true) },
     { label: "Mission Control", hint: "F3", run: () => useSystem.getState().setMissionControl(true) },
     { label: "Hide All Windows", run: () => windows.forEach((w) => minimize(w.id)) },
+    { label: "Tidy Desktop Icons", run: () => useSystem.getState().resetIconPositions() },
     "---" as const,
     { label: "Change Wallpaper", sub: true },
     { label: "System Settings…", run: () => openApp("settings", { size: { w: 700, h: 520 } }) },
