@@ -40,10 +40,20 @@ export default function DesktopIcons() {
   }
 
   return (
-    <div className="absolute right-3 top-9 z-[10] hidden flex-col items-center gap-1 sm:flex">
+    /*
+     * A single column cannot hold thirteen icons on any realistic screen, so
+     * these flow into columns of six. `dir="rtl"` lays the columns out
+     * right-to-left the way macOS does — the first icon sits top-right and new
+     * columns appear to its left — while each label stays left-to-right.
+     */
+    <div
+      dir="rtl"
+      className="absolute right-3 top-9 z-[10] hidden grid-flow-col grid-rows-6 gap-x-1 gap-y-1 sm:grid"
+    >
       {items.map((app) => (
         <button
           key={app.id}
+          dir="ltr"
           data-desktop-icon
           onClick={() => setSelected(app.id)}
           onDoubleClick={() => launch(app.id)}
