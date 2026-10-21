@@ -19,10 +19,10 @@ export default function AboutApp() {
   const [section, setSection] = useState<SectionId>("about");
 
   return (
-    <div className="flex h-full">
+    <div className="@container flex h-full">
       {/* Finder sidebar */}
       <nav
-        className="hidden w-[186px] shrink-0 flex-col gap-0.5 overflow-y-auto p-2.5 sm:flex mac-scroll"
+        className="mac-scroll hidden w-[186px] shrink-0 flex-col gap-0.5 overflow-y-auto p-2.5 @[600px]:flex"
         style={{ background: "var(--win-sidebar)" }}
       >
         <p className="px-2.5 pb-1.5 pt-1 text-[11px] font-semibold uppercase tracking-wider text-lo">Profile</p>
@@ -55,9 +55,9 @@ export default function AboutApp() {
       </nav>
 
       {/* content */}
-      <div className="mac-scroll flex-1 overflow-y-auto px-6 py-6 sm:px-8">
+      <div className="@container mac-scroll flex-1 overflow-y-auto px-6 py-6 @[600px]:px-8">
         {/* mobile section switcher */}
-        <div className="mb-5 flex gap-1.5 overflow-x-auto sm:hidden">
+        <div className="mb-5 flex gap-1.5 overflow-x-auto @[420px]:hidden">
           {SECTIONS.map((s) => (
             <button
               key={s.id}
@@ -83,7 +83,7 @@ export default function AboutApp() {
 
 function AboutSection() {
   return (
-    <div className="max-w-[58ch]">
+    <div className="mx-auto max-w-[58ch]">
       <div className="mb-7 flex items-center gap-5">
         <Avatar />
         <div className="min-w-0">
@@ -106,7 +106,7 @@ function AboutSection() {
         ))}
       </div>
 
-      <div className="mt-8 grid grid-cols-2 gap-2.5 sm:grid-cols-4">
+      <div className="mt-8 grid grid-cols-2 gap-2.5 @[560px]:grid-cols-4">
         {profile.socials.map((s) => (
           <a
             key={s.label}
@@ -157,7 +157,7 @@ function Avatar() {
 function SkillsSection() {
   const groups = [...new Set(skills.map((s) => s.group))];
   return (
-    <div className="max-w-[58ch]">
+    <div className="mx-auto max-w-[58ch]">
       <h2 className="mb-6 text-[22px] font-semibold tracking-[-0.02em]">Skills</h2>
       <div className="space-y-7">
         {groups.map((g) => (
@@ -196,7 +196,7 @@ function SkillsSection() {
 
 function CertificationsSection() {
   return (
-    <div className="max-w-[62ch]">
+    <div className="mx-auto max-w-[62ch]">
       <h2 className="mb-6 text-[22px] font-semibold tracking-[-0.02em]">Certifications</h2>
       <div className="space-y-3">
         {certifications.map((c) => (
@@ -229,7 +229,7 @@ function CertificationsSection() {
 
 function ExperienceSection() {
   return (
-    <div className="max-w-[62ch]">
+    <div className="mx-auto max-w-[62ch]">
       <h2 className="mb-6 text-[22px] font-semibold tracking-[-0.02em]">Experience</h2>
       <ol className="relative space-y-8 border-l border-[var(--glass-stroke)] pl-6">
         {experience.map((job) => (
@@ -259,7 +259,7 @@ function ExperienceSection() {
 
 function EducationSection() {
   return (
-    <div className="max-w-[62ch]">
+    <div className="mx-auto max-w-[62ch]">
       <h2 className="mb-6 text-[22px] font-semibold tracking-[-0.02em]">Education</h2>
       <div className="space-y-4">
         {education.map((e) => (

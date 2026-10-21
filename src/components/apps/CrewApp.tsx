@@ -46,7 +46,7 @@ export default function CrewApp() {
   ];
 
   return (
-    <div className="mac-scroll h-full overflow-y-auto">
+    <div className="@container mac-scroll h-full overflow-y-auto">
       {/* hero */}
       <div
         className="flex flex-col items-center px-6 pb-7 pt-9 text-center"
@@ -64,7 +64,7 @@ export default function CrewApp() {
       </div>
 
       {/* openings */}
-      <div className="grid grid-cols-1 gap-3 px-5 pb-2 sm:grid-cols-2">
+      <div className="grid grid-cols-1 gap-3 px-5 pb-2 @[600px]:grid-cols-2">
         {OPENINGS.map((o) => (
           <section
             key={o.title}

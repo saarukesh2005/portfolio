@@ -44,7 +44,7 @@ export default function CalendarApp() {
         ))}
       </div>
 
-      <div className="mac-scroll flex-1 overflow-y-auto px-5 py-5 sm:px-7">
+      <div className="@container mac-scroll flex-1 overflow-y-auto px-5 py-5 @[620px]:px-7">
         {years.map(([year, items]) => (
           <section key={year} className="mb-7 last:mb-0">
             <h2 className="mb-3 font-mono text-[12px] font-semibold tracking-wider text-lo">{year}</h2>

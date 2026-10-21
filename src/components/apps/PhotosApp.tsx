@@ -28,11 +28,11 @@ export default function PhotosApp() {
   const albums = [...new Set(gallery.map((g) => g.album))];
 
   return (
-    <div className="mac-scroll relative h-full overflow-y-auto p-5">
+    <div className="@container mac-scroll relative h-full overflow-y-auto p-5">
       {albums.map((album) => (
         <section key={album} className="mb-7 last:mb-0">
           <h2 className="mb-3 text-[11px] font-semibold uppercase tracking-wider text-lo">{album}</h2>
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+          <div className="grid grid-cols-2 gap-3 @[520px]:grid-cols-3">
             {gallery
               .filter((g) => g.album === album)
               .map((g) => (

@@ -17,7 +17,7 @@ export default function ProjectsApp({ payload }: { payload?: unknown }) {
   if (selected) return <Detail project={selected} onBack={() => setOpenId(null)} />;
 
   return (
-    <div className="mac-scroll h-full overflow-y-auto">
+    <div className="@container mac-scroll h-full overflow-y-auto">
       {allTags.length > 2 && (<div className="sticky top-0 z-10 flex gap-1.5 overflow-x-auto border-b border-[var(--glass-stroke)] px-5 py-2.5"
         style={{ background: "var(--win-bg)" }}>
         {allTags.map((t) => (
@@ -33,7 +33,7 @@ export default function ProjectsApp({ payload }: { payload?: unknown }) {
         ))}
       </div>)}
 
-      <div className="grid grid-cols-1 gap-4 p-5 sm:grid-cols-2">
+      <div className="grid grid-cols-1 gap-4 p-5 @[560px]:grid-cols-2">
         {shown.map((p) => (
           <button
             key={p.id}
@@ -106,7 +106,7 @@ function Detail({ project, onBack }: { project: Project; onBack: () => void }) {
 
       <Thumb project={project} className="h-[190px]" />
 
-      <div className="max-w-[62ch] p-6">
+      <div className="mx-auto max-w-[62ch] p-6">
         <div className="flex flex-wrap items-baseline justify-between gap-x-3">
           <h1 className="text-[24px] font-semibold tracking-[-0.02em]">{project.name}</h1>
           <span className="font-mono text-[12px] text-lo">{project.year}</span>

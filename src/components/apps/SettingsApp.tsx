@@ -11,7 +11,7 @@ export default function SettingsApp() {
   const apply = useSystem((s) => s.setAppearance);
 
   return (
-    <div className="mac-scroll h-full overflow-y-auto p-6">
+    <div className="@container mac-scroll h-full overflow-y-auto p-6">
       <h1 className="mb-5 text-[20px] font-semibold tracking-[-0.02em]">Appearance</h1>
 
       <div className="mb-8 flex gap-3">
@@ -50,7 +50,7 @@ export default function SettingsApp() {
       </label>
 
       <h2 className="mb-4 text-[20px] font-semibold tracking-[-0.02em]">Wallpaper</h2>
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+      <div className="grid grid-cols-2 gap-3 @[520px]:grid-cols-3">
         {WALLPAPERS.map((w) => (
           <button
             key={w.id}
