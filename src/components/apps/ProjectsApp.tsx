@@ -129,6 +129,13 @@ function Detail({ project, onBack }: { project: Project; onBack: () => void }) {
           ))}
         </div>
 
+        {project.privateRepo && (
+          <p className="mt-6 rounded-lg border border-[var(--glass-stroke)] bg-[var(--fill-1)] px-3 py-2.5 text-[12.5px] leading-relaxed text-mid">
+            Source is in a private repository. Happy to walk through the code or the design
+            decisions on request.
+          </p>
+        )}
+
         {(project.live || project.repo) && (
           <div className="mt-7 flex flex-wrap gap-2.5">
             {project.live && (

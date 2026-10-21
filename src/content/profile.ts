@@ -115,6 +115,8 @@ export type Project = {
   image?: string; // optional: "/projects/foo.png"
   live?: string;
   repo?: string;
+  /** source is private — show a badge instead of a dead link */
+  privateRepo?: boolean;
   featured?: boolean;
 };
 
@@ -133,6 +135,55 @@ export const projects: Project[] = [
     accent: "from-amber-500 to-orange-700",
     emoji: "📊",
     featured: true,
+  },
+  {
+    id: "imtb",
+    name: "IMTB — Indian Merged Trading Bot",
+    blurb: "An algorithmic trading platform for NSE/BSE, built correctness-first on paper trading.",
+    description: [
+      "A trading platform for Indian markets assembled in phases, each one built and tested before the next: a market-data pipeline (instrument master, trading calendar, validation, TimescaleDB tick storage with a Redis hot cache), a pluggable strategy engine, a risk engine, and backtesting with performance analytics.",
+      "The design decision I am most pleased with is that a backtest is not a separate code path — it replays the live execution path (strategy → signal → order → broker → position tracker) over stored candles with a steppable clock, so backtested and paper results cannot quietly diverge. Fills model fees and slippage.",
+      "The risk engine enforces pre-trade limits on order size, position notional and open positions, plus a daily-loss and drawdown kill-switch that halts new entries while always allowing exits. Metrics are computed in Decimal, not floats: return, CAGR, Sharpe, Sortino, max drawdown, win rate, profit factor and expectancy.",
+      "Deliberately paper-trading only. It is research software, not a licensed platform, and no real capital has gone through it.",
+    ],
+    tags: ["Python", "FastAPI", "TimescaleDB", "Redis", "Backtesting", "Risk Management"],
+    year: "2026",
+    accent: "from-sky-500 to-indigo-700",
+    emoji: "📉",
+    privateRepo: true,
+    featured: true,
+  },
+  {
+    id: "linkedin-agent",
+    name: "LinkedIn Agent",
+    blurb: "A publishing agent for finance content, with a SEBI-aware compliance verifier.",
+    description: [
+      "Generates and publishes LinkedIn posts on a schedule, running two streams: reactions to Indian market news pulled from RSS (markets, SEBI, RBI), and structured post types drawn from a content taxonomy that is the single source of truth — where the taxonomy and the code disagree, the taxonomy wins.",
+      "The part that matters is the verifier. It runs in two layers: deterministic regex hard-stops that act as a SEBI safety net and cannot be weakened by editing the taxonomy, then an LLM red-line check on top. Finance content that implies advice is a regulatory problem, so the guard is structural rather than a setting.",
+      "Nothing publishes without me. The pipeline is scrape → filter → generate → verify → human approval, with approval over Telegram. Each draft carries a UUID and the LinkedIn URN is stored before responding, so a retry can never double-post.",
+      "Started from an open-source LinkedIn agent and kept its bones — the LangGraph pipeline, Redis sessions, scheduling — then replaced the brain: the finance domain, RSS in place of a paid scraper, the migration to LinkedIn's current /rest/posts endpoint, and OAuth with auto-refresh.",
+    ],
+    tags: ["Python", "LangGraph", "FastAPI", "Redis", "OAuth", "Compliance"],
+    year: "2026",
+    accent: "from-cyan-500 to-blue-700",
+    emoji: "🤖",
+    privateRepo: true,
+  },
+  {
+    id: "saul-signal",
+    name: "Signal Engine",
+    blurb: "A content engine that turns the day's financial news into teachable Instagram carousels.",
+    description: [
+      "Reads the day's news, works out what can actually be taught from it, designs the slides, checks them against a compliance floor, and sends the result for approval: scrape → rank → compose → verify → render → notify.",
+      "Output is a full carousel rendered at 1080×1350 — cover, two to five body slides, closing slide — with a caption and alt text for every slide. Layout archetypes are chosen from the meaning of the slide (comparison, equation, statistic, myth, definition, checklist, timeline, quote) rather than from its position in the deck.",
+      "The cover slide gets a disproportionate share of the attention in both the prompt and the reach scoring, because on Instagram it is the whole impression for most of the audience — everything after it is only seen by people the cover already convinced.",
+      "As with the LinkedIn agent, there is no code path from composition to a published post. The approval gate is a module boundary, not a flag.",
+    ],
+    tags: ["Python", "TypeScript", "Content Pipeline", "Compliance", "Telegram"],
+    year: "2026",
+    accent: "from-rose-500 to-red-700",
+    emoji: "📰",
+    privateRepo: true,
   },
 ];
 
