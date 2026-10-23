@@ -289,6 +289,12 @@ type SystemStore = {
   dockLabels: boolean;
   setDockLabels: (v: boolean) => void;
 
+  /** the verse note on the desktop: shown, and where it has been dragged */
+  verseNote: boolean;
+  setVerseNote: (v: boolean) => void;
+  verseNotePos: { x: number; y: number } | null;
+  setVerseNotePos: (x: number, y: number) => void;
+
   /** where the user has dragged each desktop icon; unset means "use the grid" */
   iconPositions: Record<string, { x: number; y: number }>;
   setIconPosition: (id: string, x: number, y: number) => void;
@@ -333,6 +339,28 @@ function initialIconPositions(): Record<string, { x: number; y: number }> {
     return clean;
   } catch {
     return {};
+  }
+}
+
+function initialVerseNote(): boolean {
+  if (typeof localStorage === "undefined") return true;
+  try {
+    return localStorage.getItem("verseNote") !== "0";
+  } catch {
+    return true;
+  }
+}
+
+function initialVerseNotePos(): { x: number; y: number } | null {
+  if (typeof localStorage === "undefined") return null;
+  try {
+    const raw = localStorage.getItem("verseNotePos");
+    if (!raw) return null;
+    const p = JSON.parse(raw) as { x?: unknown; y?: unknown };
+    // never trust what came back out of storage
+    return typeof p?.x === "number" && typeof p?.y === "number" ? { x: p.x, y: p.y } : null;
+  } catch {
+    return null;
   }
 }
 
@@ -398,6 +426,25 @@ export const useSystem = create<SystemStore>((set, get) => ({
 
   quickLook: null,
   setQuickLook: (v) => set({ quickLook: v }),
+
+  verseNote: initialVerseNote(),
+  setVerseNote: (v) => {
+    try {
+      localStorage.setItem("verseNote", v ? "1" : "0");
+    } catch {
+      /* private browsing — the note just will not be remembered */
+    }
+    set({ verseNote: v });
+  },
+  verseNotePos: initialVerseNotePos(),
+  setVerseNotePos: (x, y) => {
+    try {
+      localStorage.setItem("verseNotePos", JSON.stringify({ x, y }));
+    } catch {
+      /* private browsing — the note just will not be remembered */
+    }
+    set({ verseNotePos: { x, y } });
+  },
 
   iconPositions: initialIconPositions(),
   setIconPosition: (id, x, y) =>
