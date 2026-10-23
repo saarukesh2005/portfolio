@@ -37,16 +37,16 @@ export default function SettingsApp() {
       <h2 className="mb-3 text-[20px] font-semibold tracking-[-0.02em]">Desktop</h2>
       <label className="mb-6 flex cursor-pointer items-start justify-between gap-4 rounded-xl border border-[var(--hairline)] bg-[var(--fill-1)] p-3.5">
         <span className="min-w-0">
-          <span className="block text-[13.5px]">Verse note</span>
+          <span className="block text-[13.5px]">Verse notification</span>
           <span className="block text-[12px] text-lo">
-            A sticky note on the desktop with a verse that changes daily. Drag it anywhere; ↻ shows another.
+            One verse as a notification when the desktop loads, changing daily. Click it to dismiss.
           </span>
         </span>
         <input
           type="checkbox"
           checked={verseNote}
           onChange={(e) => setVerseNote(e.target.checked)}
-          aria-label="Show the verse note on the desktop"
+          aria-label="Show the verse notification"
           className="h-4 w-4 shrink-0 accent-[var(--accent)]"
         />
       </label>

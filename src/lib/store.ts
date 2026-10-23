@@ -254,7 +254,18 @@ export const WALLPAPERS: Wallpaper[] = [
   },
 ];
 
-export type Toast = { id: number; app: string; title: string; body: string; emoji?: string };
+export type Toast = {
+  id: number;
+  app: string;
+  title: string;
+  body: string;
+  emoji?: string;
+  /** ms on screen; a verse needs longer to read than a one-line alert */
+  hold?: number;
+};
+
+/** How long a toast stays up when it does not ask for longer. */
+const TOAST_HOLD = 5200;
 
 export type Appearance = "dark" | "light";
 
@@ -289,11 +300,9 @@ type SystemStore = {
   dockLabels: boolean;
   setDockLabels: (v: boolean) => void;
 
-  /** the verse note on the desktop: shown, and where it has been dragged */
+  /** show the verse notification once per visit */
   verseNote: boolean;
   setVerseNote: (v: boolean) => void;
-  verseNotePos: { x: number; y: number } | null;
-  setVerseNotePos: (x: number, y: number) => void;
 
   /** where the user has dragged each desktop icon; unset means "use the grid" */
   iconPositions: Record<string, { x: number; y: number }>;
@@ -348,19 +357,6 @@ function initialVerseNote(): boolean {
     return localStorage.getItem("verseNote") !== "0";
   } catch {
     return true;
-  }
-}
-
-function initialVerseNotePos(): { x: number; y: number } | null {
-  if (typeof localStorage === "undefined") return null;
-  try {
-    const raw = localStorage.getItem("verseNotePos");
-    if (!raw) return null;
-    const p = JSON.parse(raw) as { x?: unknown; y?: unknown };
-    // never trust what came back out of storage
-    return typeof p?.x === "number" && typeof p?.y === "number" ? { x: p.x, y: p.y } : null;
-  } catch {
-    return null;
   }
 }
 
@@ -432,20 +428,10 @@ export const useSystem = create<SystemStore>((set, get) => ({
     try {
       localStorage.setItem("verseNote", v ? "1" : "0");
     } catch {
-      /* private browsing — the note just will not be remembered */
+      /* private browsing — the choice just will not be remembered */
     }
     set({ verseNote: v });
   },
-  verseNotePos: initialVerseNotePos(),
-  setVerseNotePos: (x, y) => {
-    try {
-      localStorage.setItem("verseNotePos", JSON.stringify({ x, y }));
-    } catch {
-      /* private browsing — the note just will not be remembered */
-    }
-    set({ verseNotePos: { x, y } });
-  },
-
   iconPositions: initialIconPositions(),
   setIconPosition: (id, x, y) =>
     set((s) => {
@@ -484,7 +470,7 @@ export const useSystem = create<SystemStore>((set, get) => ({
   notify: (t) => {
     const id = ++toastSeq;
     set((s) => ({ toasts: [...s.toasts, { ...t, id }] }));
-    setTimeout(() => get().dismiss(id), 5200);
+    setTimeout(() => get().dismiss(id), t.hold ?? TOAST_HOLD);
   },
   dismiss: (id) => set((s) => ({ toasts: s.toasts.filter((t) => t.id !== id) })),
 }));
