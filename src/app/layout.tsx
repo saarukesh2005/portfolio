@@ -6,10 +6,23 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap" });
 const mono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-mono-fallback", display: "swap" });
 
+/*
+ * Without this, Open Graph image URLs resolve against localhost and every
+ * link preview breaks once the site is shared. Vercel supplies the
+ * production host; set NEXT_PUBLIC_SITE_URL to override it for a custom
+ * domain.
+ */
+const siteUrl =
+  process.env.NEXT_PUBLIC_SITE_URL ??
+  (process.env.VERCEL_PROJECT_PRODUCTION_URL
+    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+    : "http://localhost:3000");
+
 const title = `${profile.name} — ${profile.role}`;
 const description = profile.tagline;
 
 export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
   title,
   description,
   applicationName: `${profile.name} OS`,

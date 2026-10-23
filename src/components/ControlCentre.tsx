@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { WALLPAPERS, useSystem, useWindows } from "@/lib/store";
+import { NowPlayingCard } from "@/components/NowPlaying";
 
 export default function ControlCentre() {
   const open = useSystem((s) => s.controlCentre);
@@ -44,6 +45,8 @@ export default function ControlCentre() {
           className="fixed right-2 top-[30px] z-[9350] w-[292px] rounded-2xl border border-white/14 p-3 shadow-2xl"
           style={{ background: "rgba(42,44,52,.86)", backdropFilter: "blur(38px) saturate(180%)" }}
         >
+          <NowPlayingCard />
+
           <div className="mb-2.5 grid grid-cols-2 gap-2">
             {(["dark", "light"] as const).map((m) => (
               <button
