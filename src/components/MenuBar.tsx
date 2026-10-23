@@ -5,7 +5,7 @@ import { AnimatePresence, motion } from "motion/react";
 import { appById } from "@/lib/apps";
 import { useSystem, useWindows } from "@/lib/store";
 import { Glyph } from "@/components/Icons";
-import { profile } from "@/content/profile";
+import { nowPlaying, profile } from "@/content/profile";
 
 export default function MenuBar() {
   const windows = useWindows((s) => s.windows);
@@ -213,54 +213,153 @@ function Clock() {
   );
 }
 
-/** The notch / Dynamic Island, centred over the menu bar. */
+/* ───────────────────────── Dynamic Island ─────────────────────────
+   A now-playing widget, not a player: the bars, the scrolling title
+   and the progress line are animations. No audio is embedded and no
+   Spotify script is loaded — clicking opens the real track instead.
+   ------------------------------------------------------------------ */
+
+/** Resting heights of the equaliser bars, in px. */
+const EQ = [9, 15, 7, 13, 10];
+
+/** How long the fake progress line takes to cross the Island, in seconds. */
+const SWEEP = 34;
+
 function Island() {
-  const windows = useWindows((s) => s.windows);
   const [expanded, setExpanded] = useState(false);
-  const running = windows.length;
 
   return (
-    <motion.div
+    <motion.a
+      href={nowPlaying.url}
+      target="_blank"
+      rel="noreferrer noopener"
       onMouseEnter={() => setExpanded(true)}
       onMouseLeave={() => setExpanded(false)}
-      animate={{ width: expanded ? 268 : 148, height: expanded ? 46 : 26 }}
+      onFocus={() => setExpanded(true)}
+      onBlur={() => setExpanded(false)}
+      animate={{ width: expanded ? 292 : 152, height: expanded ? 48 : 26 }}
       transition={{ type: "spring", stiffness: 420, damping: 30 }}
-      className="pointer-events-auto absolute left-1/2 top-0 z-10 hidden -translate-x-1/2 items-center justify-center overflow-hidden rounded-b-[18px] bg-black md:flex"
+      aria-label={`Now playing: ${nowPlaying.title} — ${nowPlaying.artist}. Opens in Spotify.`}
+      className="pointer-events-auto absolute left-1/2 top-0 z-10 hidden -translate-x-1/2 items-center justify-center overflow-hidden rounded-b-[18px] bg-black no-underline md:flex"
       style={{ boxShadow: "0 2px 10px rgba(0,0,0,.6)" }}
     >
       <AnimatePresence mode="wait">
         {expanded ? (
-          <motion.div
+          <motion.span
             key="open"
-            initial={{ opacity: 0, scale: 0.9 }}
+            initial={{ opacity: 0, scale: 0.92 }}
             animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.9 }}
+            exit={{ opacity: 0, scale: 0.92 }}
+            transition={{ duration: 0.14 }}
             className="flex w-full items-center gap-2.5 px-3.5"
           >
-            <span className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-gradient-to-br from-sky-400 to-indigo-600 text-[12px] font-bold">
-              {profile.name[0]}
-            </span>
+            <Artwork />
             <span className="min-w-0 flex-1 leading-tight">
-              <span className="block truncate text-[11.5px] font-semibold">{profile.name}</span>
-              <span className="block truncate text-[10px] text-white/55">
-                {running ? `${running} window${running === 1 ? "" : "s"} open` : "press ⌘K to search"}
-              </span>
+              <Marquee text={nowPlaying.title} className="text-[11.5px] font-semibold text-white" />
+              <span className="mt-[1px] block truncate text-[10px] text-white/55">{nowPlaying.artist}</span>
             </span>
-            <span className="flex items-end gap-[2px]">
-              {[8, 14, 6, 11, 9].map((h, i) => (
-                <motion.span
-                  key={i}
-                  className="w-[2.5px] rounded-full bg-emerald-400"
-                  animate={{ height: [h * 0.4, h, h * 0.5, h * 0.85, h * 0.4] }}
-                  transition={{ duration: 1.1, repeat: Infinity, delay: i * 0.1 }}
-                />
-              ))}
-            </span>
-          </motion.div>
+            <Equaliser scale={1} />
+          </motion.span>
         ) : (
-          <motion.span key="shut" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="h-full w-full" />
+          <motion.span
+            key="shut"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.14 }}
+            className="flex h-full items-center"
+          >
+            <Equaliser scale={0.62} />
+          </motion.span>
         )}
       </AnimatePresence>
-    </motion.div>
+
+      {/* progress line, pinned to the Island's bottom lip */}
+      <span className="pointer-events-none absolute inset-x-0 bottom-0 h-[2px] overflow-hidden">
+        <motion.span
+          className="block h-full rounded-full"
+          style={{ background: "linear-gradient(90deg, #1ed760, #86efac)" }}
+          animate={{ width: ["4%", "100%"], opacity: expanded ? 1 : 0.42 }}
+          transition={{
+            width: { duration: SWEEP, repeat: Infinity, ease: "linear" },
+            opacity: { duration: 0.2 },
+          }}
+        />
+      </span>
+    </motion.a>
+  );
+}
+
+/** Stand-in album art: a Gear 5 red-to-gold tile with a spinning record. */
+function Artwork() {
+  return (
+    <span
+      className="relative grid h-[30px] w-[30px] shrink-0 place-items-center overflow-hidden rounded-[7px]"
+      style={{ backgroundImage: "linear-gradient(145deg, #e8453c 0%, #f6c445 100%)" }}
+    >
+      <motion.span
+        className="grid h-[19px] w-[19px] place-items-center rounded-full bg-black/80"
+        animate={{ rotate: 360 }}
+        transition={{ duration: 3.2, repeat: Infinity, ease: "linear" }}
+      >
+        <span className="h-[5px] w-[5px] rounded-full bg-white/85" />
+        <span className="absolute h-[19px] w-[19px] rounded-full border border-white/15" />
+      </motion.span>
+    </span>
+  );
+}
+
+/** Five bars bouncing on a stagger — the "audio is playing" tell. */
+function Equaliser({ scale }: { scale: number }) {
+  return (
+    <span className="flex shrink-0 items-end gap-[2px]" aria-hidden>
+      {EQ.map((h, i) => {
+        const peak = h * scale;
+        return (
+          <motion.span
+            key={i}
+            className="w-[2.5px] rounded-full"
+            style={{ background: "#1ed760" }}
+            animate={{ height: [peak * 0.35, peak, peak * 0.5, peak * 0.85, peak * 0.35] }}
+            transition={{ duration: 1.1, repeat: Infinity, delay: i * 0.1, ease: "easeInOut" }}
+          />
+        );
+      })}
+    </span>
+  );
+}
+
+/**
+ * Scrolls its text only when the text is actually too wide, so a short
+ * title sits still instead of sliding about for no reason.
+ */
+function Marquee({ text, className = "" }: { text: string; className?: string }) {
+  const frame = useRef<HTMLSpanElement>(null);
+  const run = useRef<HTMLSpanElement>(null);
+  const [shift, setShift] = useState(0);
+
+  useEffect(() => {
+    const f = frame.current;
+    const r = run.current;
+    if (!f || !r) return;
+    const overflow = r.scrollWidth - f.clientWidth;
+    setShift(overflow > 2 ? overflow + 6 : 0);
+  }, [text]);
+
+  return (
+    <span ref={frame} className={`block overflow-hidden whitespace-nowrap ${className}`}>
+      <motion.span
+        ref={run}
+        className="inline-block"
+        animate={shift ? { x: [0, 0, -shift, -shift, 0] } : { x: 0 }}
+        transition={
+          shift
+            ? { duration: 8, times: [0, 0.12, 0.5, 0.62, 1], repeat: Infinity, ease: "easeInOut" }
+            : { duration: 0 }
+        }
+      >
+        {text}
+      </motion.span>
+    </span>
   );
 }

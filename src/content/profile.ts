@@ -311,3 +311,15 @@ export const timeline: Milestone[] = [
 
 /** What the Résumé window's download button hands over. */
 export const resumeFile = "/Saarukesh_K_Resume.docx";
+
+/**
+ * The track the Dynamic Island pretends to be playing. It is a visual only —
+ * no audio is embedded and no Spotify script is loaded, so the page stays
+ * fast and sets no third-party cookies. Clicking the Island opens the real
+ * track on Spotify in a new tab.
+ */
+export const nowPlaying = {
+  url: "https://open.spotify.com/track/3HmqX4ziWk4ZA1pblnux7e",
+  title: "Overtaken × Drums of Liberation",
+  artist: "Gear 5 Theme",
+} as const;
