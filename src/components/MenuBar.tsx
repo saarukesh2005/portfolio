@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import { AnimatePresence, motion } from "motion/react";
 import { appById } from "@/lib/apps";
 import { useSystem, useWindows } from "@/lib/store";
@@ -219,6 +220,9 @@ function Clock() {
    Spotify script is loaded — clicking opens the real track instead.
    ------------------------------------------------------------------ */
 
+/** Cover art, shown while the track is "playing". */
+const COVER = "/overtaken-gear5.webp";
+
 /** Resting heights of the equaliser bars, in px. */
 const EQ = [9, 15, 7, 13, 10];
 
@@ -237,7 +241,7 @@ function Island() {
       onMouseLeave={() => setExpanded(false)}
       onFocus={() => setExpanded(true)}
       onBlur={() => setExpanded(false)}
-      animate={{ width: expanded ? 292 : 152, height: expanded ? 48 : 26 }}
+      animate={{ width: expanded ? 300 : 152, height: expanded ? 52 : 26 }}
       transition={{ type: "spring", stiffness: 420, damping: 30 }}
       aria-label={`Now playing: ${nowPlaying.title} — ${nowPlaying.artist}. Opens in Spotify.`}
       className="pointer-events-auto absolute left-1/2 top-0 z-10 hidden -translate-x-1/2 items-center justify-center overflow-hidden rounded-b-[18px] bg-black no-underline md:flex"
@@ -290,22 +294,17 @@ function Island() {
   );
 }
 
-/** Stand-in album art: a Gear 5 red-to-gold tile with a spinning record. */
+/** The track's cover art, breathing gently while it "plays". */
 function Artwork() {
   return (
-    <span
-      className="relative grid h-[30px] w-[30px] shrink-0 place-items-center overflow-hidden rounded-[7px]"
-      style={{ backgroundImage: "linear-gradient(145deg, #e8453c 0%, #f6c445 100%)" }}
+    <motion.span
+      className="relative block h-[36px] w-[36px] shrink-0 overflow-hidden rounded-[8px] bg-[#0b1020]"
+      style={{ boxShadow: "0 0 0 1px rgba(255,255,255,.14), 0 2px 8px rgba(0,0,0,.55)" }}
+      animate={{ scale: [1, 1.045, 1] }}
+      transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut" }}
     >
-      <motion.span
-        className="grid h-[19px] w-[19px] place-items-center rounded-full bg-black/80"
-        animate={{ rotate: 360 }}
-        transition={{ duration: 3.2, repeat: Infinity, ease: "linear" }}
-      >
-        <span className="h-[5px] w-[5px] rounded-full bg-white/85" />
-        <span className="absolute h-[19px] w-[19px] rounded-full border border-white/15" />
-      </motion.span>
-    </span>
+      <Image src={COVER} alt="" fill sizes="36px" className="object-cover" />
+    </motion.span>
   );
 }
 
