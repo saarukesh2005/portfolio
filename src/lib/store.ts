@@ -254,18 +254,7 @@ export const WALLPAPERS: Wallpaper[] = [
   },
 ];
 
-export type Toast = {
-  id: number;
-  app: string;
-  title: string;
-  body: string;
-  emoji?: string;
-  /** ms on screen; a verse needs longer to read than a one-line alert */
-  hold?: number;
-};
-
-/** How long a toast stays up when it does not ask for longer. */
-const TOAST_HOLD = 5200;
+export type Toast = { id: number; app: string; title: string; body: string; emoji?: string };
 
 export type Appearance = "dark" | "light";
 
@@ -299,10 +288,6 @@ type SystemStore = {
   /** show app names under the dock icons */
   dockLabels: boolean;
   setDockLabels: (v: boolean) => void;
-
-  /** show the verse notification once per visit */
-  verseNote: boolean;
-  setVerseNote: (v: boolean) => void;
 
   /** where the user has dragged each desktop icon; unset means "use the grid" */
   iconPositions: Record<string, { x: number; y: number }>;
@@ -348,15 +333,6 @@ function initialIconPositions(): Record<string, { x: number; y: number }> {
     return clean;
   } catch {
     return {};
-  }
-}
-
-function initialVerseNote(): boolean {
-  if (typeof localStorage === "undefined") return true;
-  try {
-    return localStorage.getItem("verseNote") !== "0";
-  } catch {
-    return true;
   }
 }
 
@@ -423,15 +399,6 @@ export const useSystem = create<SystemStore>((set, get) => ({
   quickLook: null,
   setQuickLook: (v) => set({ quickLook: v }),
 
-  verseNote: initialVerseNote(),
-  setVerseNote: (v) => {
-    try {
-      localStorage.setItem("verseNote", v ? "1" : "0");
-    } catch {
-      /* private browsing — the choice just will not be remembered */
-    }
-    set({ verseNote: v });
-  },
   iconPositions: initialIconPositions(),
   setIconPosition: (id, x, y) =>
     set((s) => {
@@ -470,7 +437,7 @@ export const useSystem = create<SystemStore>((set, get) => ({
   notify: (t) => {
     const id = ++toastSeq;
     set((s) => ({ toasts: [...s.toasts, { ...t, id }] }));
-    setTimeout(() => get().dismiss(id), t.hold ?? TOAST_HOLD);
+    setTimeout(() => get().dismiss(id), 5200);
   },
   dismiss: (id) => set((s) => ({ toasts: s.toasts.filter((t) => t.id !== id) })),
 }));

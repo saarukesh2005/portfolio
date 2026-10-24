@@ -6,7 +6,6 @@ import BootScreen from "@/components/BootScreen";
 import MenuBar from "@/components/MenuBar";
 import Dock from "@/components/Dock";
 import DesktopIcons from "@/components/DesktopIcons";
-import VerseToast from "@/components/VerseToast";
 import Window from "@/components/Window";
 import Spotlight from "@/components/Spotlight";
 import ContextMenu from "@/components/ContextMenu";
@@ -108,7 +107,6 @@ export default function Desktop() {
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.55 }} className="h-full w-full">
           <MenuBar />
           <DesktopIcons />
-          <VerseToast />
 
           {/* windows */}
           <AnimatePresence>

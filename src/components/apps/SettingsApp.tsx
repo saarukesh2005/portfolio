@@ -7,8 +7,6 @@ export default function SettingsApp() {
   const setWallpaper = useSystem((s) => s.setWallpaper);
   const appearance = useSystem((s) => s.appearance);
   const dockLabels = useSystem((s) => s.dockLabels);
-  const verseNote = useSystem((s) => s.verseNote);
-  const setVerseNote = useSystem((s) => s.setVerseNote);
   const setDockLabels = useSystem((s) => s.setDockLabels);
   const apply = useSystem((s) => s.setAppearance);
 
@@ -33,23 +31,6 @@ export default function SettingsApp() {
           </button>
         ))}
       </div>
-
-      <h2 className="mb-3 text-[20px] font-semibold tracking-[-0.02em]">Desktop</h2>
-      <label className="mb-6 flex cursor-pointer items-start justify-between gap-4 rounded-xl border border-[var(--hairline)] bg-[var(--fill-1)] p-3.5">
-        <span className="min-w-0">
-          <span className="block text-[13.5px]">Verse notification</span>
-          <span className="block text-[12px] text-lo">
-            One verse as a notification when the desktop loads, changing daily. Click it to dismiss.
-          </span>
-        </span>
-        <input
-          type="checkbox"
-          checked={verseNote}
-          onChange={(e) => setVerseNote(e.target.checked)}
-          aria-label="Show the verse notification"
-          className="h-4 w-4 shrink-0 accent-[var(--accent)]"
-        />
-      </label>
 
       <h2 className="mb-3 text-[20px] font-semibold tracking-[-0.02em]">Dock</h2>
       <label className="mb-8 flex items-center justify-between gap-4 rounded-xl border border-[var(--glass-stroke)] bg-[var(--fill-1)] px-3.5 py-3">
