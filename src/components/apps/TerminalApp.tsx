@@ -424,10 +424,23 @@ function Banner() {
   const width = Math.max(...rows.map((r) => r.length), 22) + 2;
   const pad = (r: string) => `│ ${r.padEnd(width)}│`;
 
+  /* The frame is as wide as the longest row — 53 characters here, which
+     overruns a phone and leaves the box clipped open on the right. Below sm
+     the rows stand on their own. The frame is decoration, so it is hidden
+     from screen readers and the plain rows stay available to them. */
   return (
-    <pre className="mb-1 text-[11px] leading-[1.35] text-emerald-400/90 sm:text-[12px]">
-      {[`┌${"─".repeat(width + 1)}┐`, pad(rows[0]), pad(rows[1]), pad(rows[2]), `└${"─".repeat(width + 1)}┘`].join("\n")}
-    </pre>
+    <>
+      <pre aria-hidden className="mb-1 hidden text-[11px] leading-[1.35] text-emerald-400/90 sm:block sm:text-[12px]">
+        {[`┌${"─".repeat(width + 1)}┐`, pad(rows[0]), pad(rows[1]), pad(rows[2]), `└${"─".repeat(width + 1)}┘`].join("\n")}
+      </pre>
+      <div className="mb-1 sm:sr-only">
+        {rows.map((r) => (
+          <p key={r} className="text-[11px] leading-[1.45] text-emerald-400/90">
+            {r}
+          </p>
+        ))}
+      </div>
+    </>
   );
 }
 

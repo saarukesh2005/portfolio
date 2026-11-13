@@ -27,6 +27,12 @@ export default function Dock() {
   const minimized = windows.filter((w) => w.minimized);
   const pinned = APPS.filter((a) => a.dock);
 
+  /* A phone shows no desktop icons and drops the link shortcuts, so most of
+     the site sits behind one button. Count what is hidden and put the number
+     on it — "Launchpad" alone tells a non-Mac visitor nothing. */
+  const onPhoneDock = pinned.filter((a) => !a.href && !a.secondaryDock).length;
+  const behindLaunchpad = APPS.length - onPhoneDock;
+
   return (
     <div className="pointer-events-none fixed inset-x-0 bottom-0 z-[8000] flex justify-center pb-2">
       <motion.div
@@ -42,16 +48,24 @@ export default function Dock() {
           boxShadow: "0 12px 40px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.22)",
         }}
       >
-        {/* phones lose the secondary apps below, so Launchpad is how you reach them */}
-        <div className="flex flex-col items-center sm:hidden">
+        {/* phones lose the desktop icons and the link shortcuts, so this is
+            the only way to the other apps — the badge says how many */}
+        <div className="relative flex flex-col items-center sm:hidden">
           <DockItem
             mouseX={mouseX}
-            label="Launchpad"
+            label="All Apps"
             icon={<LaunchpadIcon />}
             running={false}
             size={size}
             onClick={() => setLaunchpad(true)}
           />
+          <span
+            aria-hidden
+            className="pointer-events-none absolute right-1 top-0 grid h-[17px] min-w-[17px] place-items-center rounded-full border border-white/25 bg-[#ff3b30] px-1 text-[10px] font-semibold leading-none text-white"
+            style={{ boxShadow: "0 1px 4px rgba(0,0,0,.5)" }}
+          >
+            {behindLaunchpad}
+          </span>
         </div>
 
         {pinned.map((app) => (

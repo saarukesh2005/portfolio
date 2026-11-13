@@ -33,7 +33,10 @@ export default function WantedApp() {
       >
         <p
           className="text-center font-bold leading-none tracking-[0.1em]"
-          style={{ fontFamily: "Georgia, 'Times New Roman', serif", fontSize: 54 }}
+          /* 54px overran the poster's own border on a phone. The poster is
+             400px at most and fills the window on mobile, so scaling with the
+             viewport and capping at the original size fits both. */
+          style={{ fontFamily: "Georgia, 'Times New Roman', serif", fontSize: "clamp(30px, 10vw, 54px)" }}
         >
           WANTED
         </p>

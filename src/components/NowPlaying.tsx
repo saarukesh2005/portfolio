@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { motion } from "motion/react";
+import { motion, useReducedMotion } from "motion/react";
 import { nowPlaying } from "@/content/profile";
 
 /* ──────────────────────────── now playing ────────────────────────────
@@ -13,6 +13,12 @@ import { nowPlaying } from "@/content/profile";
 
    Shared by the Dynamic Island (desktop) and Control Centre (every
    size), so a phone still gets to see it.
+
+   Everything here loops forever, which is exactly what
+   prefers-reduced-motion exists to stop. The CSS rule in globals.css
+   cannot reach these: motion/react drives inline styles frame by frame
+   rather than CSS animations, so each one checks the preference itself
+   and settles into a still frame instead.
    -------------------------------------------------------------------- */
 
 /** Cover art, shown while the track is "playing". */
@@ -26,6 +32,7 @@ const SWEEP = 34;
 
 /** The track's cover art, breathing gently while it "plays". */
 export function Artwork({ size }: { size: number }) {
+  const still = useReducedMotion();
   return (
     <motion.span
       className="relative block shrink-0 overflow-hidden rounded-[8px] bg-[#0b1020]"
@@ -34,8 +41,8 @@ export function Artwork({ size }: { size: number }) {
         height: size,
         boxShadow: "0 0 0 1px rgba(255,255,255,.14), 0 2px 8px rgba(0,0,0,.55)",
       }}
-      animate={{ scale: [1, 1.045, 1] }}
-      transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut" }}
+      animate={still ? { scale: 1 } : { scale: [1, 1.045, 1] }}
+      transition={still ? { duration: 0 } : { duration: 2.2, repeat: Infinity, ease: "easeInOut" }}
     >
       <Image src={COVER} alt="" fill sizes={`${size}px`} className="object-cover" />
     </motion.span>
@@ -44,6 +51,7 @@ export function Artwork({ size }: { size: number }) {
 
 /** Bars bouncing on a stagger — the "audio is playing" tell. */
 export function Equaliser({ scale = 1 }: { scale?: number }) {
+  const still = useReducedMotion();
   return (
     <span className="flex shrink-0 items-end gap-[2px]" aria-hidden>
       {EQ.map((h, i) => {
@@ -53,8 +61,8 @@ export function Equaliser({ scale = 1 }: { scale?: number }) {
             key={i}
             className="w-[2.5px] rounded-full"
             style={{ background: "#1ed760" }}
-            animate={{ height: [peak * 0.35, peak, peak * 0.5, peak * 0.85, peak * 0.35] }}
-            transition={{ duration: 1.1, repeat: Infinity, delay: i * 0.1, ease: "easeInOut" }}
+            animate={still ? { height: peak * 0.6 } : { height: [peak * 0.35, peak, peak * 0.5, peak * 0.85, peak * 0.35] }}
+            transition={still ? { duration: 0 } : { duration: 1.1, repeat: Infinity, delay: i * 0.1, ease: "easeInOut" }}
           />
         );
       })}
@@ -64,14 +72,15 @@ export function Equaliser({ scale = 1 }: { scale?: number }) {
 
 /** The sweeping progress line. `dim` fades it for the resting notch. */
 export function ProgressLine({ dim = false, className = "" }: { dim?: boolean; className?: string }) {
+  const still = useReducedMotion();
   return (
     <span className={`pointer-events-none overflow-hidden ${className}`}>
       <motion.span
         className="block h-full rounded-full"
         style={{ background: "linear-gradient(90deg, #1ed760, #86efac)" }}
-        animate={{ width: ["4%", "100%"], opacity: dim ? 0.42 : 1 }}
+        animate={{ width: still ? "38%" : ["4%", "100%"], opacity: dim ? 0.42 : 1 }}
         transition={{
-          width: { duration: SWEEP, repeat: Infinity, ease: "linear" },
+          width: still ? { duration: 0 } : { duration: SWEEP, repeat: Infinity, ease: "linear" },
           opacity: { duration: 0.2 },
         }}
       />
@@ -87,6 +96,7 @@ export function Marquee({ text, className = "" }: { text: string; className?: st
   const frame = useRef<HTMLSpanElement>(null);
   const run = useRef<HTMLSpanElement>(null);
   const [shift, setShift] = useState(0);
+  const still = useReducedMotion();
 
   useEffect(() => {
     const f = frame.current;
@@ -101,9 +111,9 @@ export function Marquee({ text, className = "" }: { text: string; className?: st
       <motion.span
         ref={run}
         className="inline-block"
-        animate={shift ? { x: [0, 0, -shift, -shift, 0] } : { x: 0 }}
+        animate={shift && !still ? { x: [0, 0, -shift, -shift, 0] } : { x: 0 }}
         transition={
-          shift
+          shift && !still
             ? { duration: 8, times: [0, 0.12, 0.5, 0.62, 1], repeat: Infinity, ease: "easeInOut" }
             : { duration: 0 }
         }

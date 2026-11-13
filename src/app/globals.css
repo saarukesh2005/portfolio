@@ -19,8 +19,10 @@
   --win-chrome: #2a2d35;
   --win-sidebar: #23262e;
   --text-hi: rgba(255, 255, 255, 0.94);
-  --text-mid: rgba(255, 255, 255, 0.62);
-  --text-lo: rgba(255, 255, 255, 0.4);
+  /* these three clear WCAG AA (4.5:1) on every window surface; see the note
+     in the light block below before changing them */
+  --text-mid: rgba(255, 255, 255, 0.7);
+  --text-lo: rgba(255, 255, 255, 0.5);
   --accent: #0a84ff;
 
   /* tinted fills for surfaces INSIDE windows — these invert with the
@@ -37,8 +39,12 @@
   --win-chrome: #e8eaf0;
   --win-sidebar: #eef0f5;
   --text-hi: rgba(16, 18, 24, 0.94);
-  --text-mid: rgba(16, 18, 24, 0.6);
-  --text-lo: rgba(16, 18, 24, 0.38);
+  /* Worst case is --win-chrome. At these alphas: hi 13.7:1, mid 7.8:1,
+     lo 4.6:1 — all clear AA for body text, and the tiers stay ~1.7x apart
+     so the hierarchy still reads. --text-lo is used ~90 times at 10.5-12.5px,
+     which never counts as "large text", so 4.5:1 is the bar it has to meet. */
+  --text-mid: rgba(16, 18, 24, 0.76);
+  --text-lo: rgba(16, 18, 24, 0.6);
   --accent: #0a6cff;
 
   --fill-1: rgba(0, 0, 0, 0.042);
@@ -77,6 +83,26 @@
 
 * {
   -webkit-tap-highlight-color: transparent;
+}
+
+/* ── keyboard focus ───────────────────────────────────────────────────
+   One deliberate ring. The browser default lands inconsistently across
+   the dark panels, the light windows and a photo wallpaper, so it is
+   replaced rather than removed. White with a dark halo reads on all of
+   them; inside a window the surface is known, so the accent is used. */
+:focus-visible {
+  /* longhands on purpose: a var() inside the `outline` shorthand fails to
+     substitute and silently drops the colour back to currentColor */
+  outline-width: 2px;
+  outline-style: solid;
+  outline-color: #fff;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.5);
+}
+
+.window-surface :focus-visible {
+  outline-color: var(--accent);
+  box-shadow: none;
 }
 
 html,
