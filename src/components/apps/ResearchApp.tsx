@@ -128,7 +128,7 @@ export default function ResearchApp() {
                 </span>
               )}
               {n.draft && (
-                <span className="rounded bg-amber-500/18 px-1.5 py-[1px] text-[10.5px] text-amber-400">draft</span>
+                <span className="rounded bg-amber-500/18 px-1.5 py-[1px] text-[10.5px] text-[var(--warn)]">draft</span>
               )}
             </div>
 
@@ -175,7 +175,7 @@ function Note({ note, onBack }: { note: ResearchNote; onBack: () => void }) {
             <span className="rounded bg-[var(--fill-2)] px-1.5 py-[1px] font-mono text-[10.5px] text-mid">{note.ticker}</span>
           )}
           {note.draft && (
-            <span className="rounded bg-amber-500/18 px-1.5 py-[1px] text-[10.5px] text-amber-400">draft</span>
+            <span className="rounded bg-amber-500/18 px-1.5 py-[1px] text-[10.5px] text-[var(--warn)]">draft</span>
           )}
         </div>
 

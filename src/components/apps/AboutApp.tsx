@@ -210,10 +210,10 @@ function CertificationsSection() {
               <span
                 className={`rounded-md px-2 py-[2px] text-[11.5px] ${
                   c.status === "Completed"
-                    ? "bg-emerald-500/18 text-emerald-400"
+                    ? "bg-emerald-500/18 text-[var(--good)]"
                     : c.status === "In progress"
-                      ? "bg-sky-500/18 text-sky-400"
-                      : "bg-amber-500/18 text-amber-400"
+                      ? "bg-sky-500/18 text-[var(--info)]"
+                      : "bg-amber-500/18 text-[var(--warn)]"
                 }`}
               >
                 {c.status}

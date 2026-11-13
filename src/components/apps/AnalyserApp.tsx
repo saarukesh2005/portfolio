@@ -14,9 +14,9 @@ import {
 } from "@/lib/ratios";
 
 const VERDICT: Record<Verdict, { label: string; cls: string }> = {
-  strong: { label: "Strong", cls: "bg-emerald-500/18 text-emerald-400" },
-  fair: { label: "Fair", cls: "bg-amber-500/18 text-amber-400" },
-  weak: { label: "Weak", cls: "bg-red-500/18 text-red-400" },
+  strong: { label: "Strong", cls: "bg-emerald-500/18 text-[var(--good)]" },
+  fair: { label: "Fair", cls: "bg-amber-500/18 text-[var(--warn)]" },
+  weak: { label: "Weak", cls: "bg-red-500/18 text-[var(--bad)]" },
   none: { label: "—", cls: "bg-[var(--fill-2)] text-lo" },
 };
 
@@ -138,7 +138,7 @@ export default function AnalyserApp() {
         </div>
 
         {sampleLoaded && (
-          <p className="mb-4 rounded-lg border border-amber-500/25 bg-amber-500/10 px-3 py-2 text-[12px] leading-relaxed text-amber-300/90">
+          <p className="mb-4 rounded-lg border border-amber-500/25 bg-amber-500/10 px-3 py-2 text-[12px] leading-relaxed text-[var(--warn)]/90">
             Showing illustrative figures for a made-up manufacturer, so there is something to look
             at. These are not any real company&rsquo;s accounts — type over them.
           </p>
@@ -234,10 +234,10 @@ export default function AnalyserApp() {
                       <span
                         className={`rounded-md px-1.5 py-[2px] text-[10.5px] ${
                           z.zone === "Safe"
-                            ? "bg-emerald-500/18 text-emerald-400"
+                            ? "bg-emerald-500/18 text-[var(--good)]"
                             : z.zone === "Grey"
-                              ? "bg-amber-500/18 text-amber-400"
-                              : "bg-red-500/18 text-red-400"
+                              ? "bg-amber-500/18 text-[var(--warn)]"
+                              : "bg-red-500/18 text-[var(--bad)]"
                         }`}
                       >
                         {z.zone}

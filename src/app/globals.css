@@ -85,6 +85,29 @@
   -webkit-tap-highlight-color: transparent;
 }
 
+/* ── status colours ────────────────────────────────────────────────────
+   The Tailwind 300/400 shades were picked against a dark window and score
+   1.4-2.6:1 on the light one — the Analyser's verdicts and Debt Escape's
+   figures were effectively invisible in light mode. Each token carries a
+   value per surface, and each value clears AA on the surface it is used on
+   (4.6-6.7:1). The translucent -500/10..30 fills are unaffected; those are
+   decorative tints, not text. */
+:root {
+  --good: #34d399;
+  --warn: #fbbf24;
+  --bad: #f87171;
+  --info: #38bdf8;
+  --note: #a78bfa;
+}
+
+:root[data-appearance="light"] {
+  --good: #047857;
+  --warn: #a16207;
+  --bad: #b91c1c;
+  --info: #0369a1;
+  --note: #6d28d9;
+}
+
 /* ── Liquid Glass ───────────────────────────────────────────────────────
    Tuned to macOS 27 "Golden Gate" rather than the original macOS 26 look.
    The first Liquid Glass was designed against OLED and read poorly on the

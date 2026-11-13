@@ -78,23 +78,23 @@ export default function Shortcuts() {
             exit={{ scale: 0.96, y: 10 }}
             transition={{ type: "spring", stiffness: 460, damping: 34 }}
             onClick={(e) => e.stopPropagation()}
-            className="w-full max-w-[640px] overflow-hidden rounded-2xl border border-white/16 shadow-2xl"
-            style={{ background: "rgba(38,40,48,.88)", backdropFilter: "blur(40px) saturate(170%)" }}
+            className="w-full max-w-[640px] overflow-hidden rounded-2xl border border-[var(--glass-stroke)] shadow-2xl"
+            style={{ background: "var(--glass-deep)", backdropFilter: "blur(40px) saturate(170%)" }}
           >
-            <div className="flex items-center justify-between border-b border-white/10 px-5 py-3">
-              <h2 className="text-[15px] font-semibold text-white">Keyboard Shortcuts</h2>
-              <kbd className="rounded border border-white/18 px-1.5 py-0.5 font-mono text-[10.5px] text-white/50">esc</kbd>
+            <div className="flex items-center justify-between border-b border-[var(--glass-stroke)] px-5 py-3">
+              <h2 className="text-[15px] font-semibold text-[var(--text-hi)]">Keyboard Shortcuts</h2>
+              <kbd className="rounded border border-[var(--glass-stroke)] px-1.5 py-0.5 font-mono text-[10.5px] text-[var(--text-lo)]">esc</kbd>
             </div>
 
             <div className="mac-scroll grid max-h-[62vh] gap-x-8 gap-y-5 overflow-y-auto p-5 sm:grid-cols-2">
               {GROUPS.map((g) => (
                 <section key={g.title}>
-                  <h3 className="mb-2 text-[10.5px] font-semibold uppercase tracking-wider text-white/35">{g.title}</h3>
+                  <h3 className="mb-2 text-[10.5px] font-semibold uppercase tracking-wider text-[var(--text-lo)]">{g.title}</h3>
                   <div className="space-y-1.5">
                     {g.rows.map(([k, v]) => (
                       <div key={k} className="flex items-center justify-between gap-4">
-                        <span className="text-[13px] text-white/75">{v}</span>
-                        <kbd className="shrink-0 rounded-md border border-white/16 bg-white/8 px-1.5 py-0.5 font-mono text-[11px] text-white/80">
+                        <span className="text-[13px] text-[var(--text-mid)]">{v}</span>
+                        <kbd className="shrink-0 rounded-md border border-[var(--glass-stroke)] bg-[var(--fill-1)] px-1.5 py-0.5 font-mono text-[11px] text-[var(--text-mid)]">
                           {k}
                         </kbd>
                       </div>

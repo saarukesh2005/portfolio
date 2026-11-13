@@ -66,7 +66,7 @@ export default function Spotlight() {
         title: s.label,
         subtitle: s.handle,
         kind: "Links",
-        icon: <span className="grid h-8 w-8 place-items-center rounded-lg bg-white/12 text-[13px]">↗</span>,
+        icon: <span className="grid h-8 w-8 place-items-center rounded-lg bg-[var(--fill-2)] text-[13px]">↗</span>,
         haystack: `${s.label} ${s.handle} ${s.url}`.toLowerCase(),
         run: () => window.open(s.url, "_blank", "noopener,noreferrer"),
       });
@@ -78,7 +78,7 @@ export default function Spotlight() {
         title: "Switch to Dark",
         subtitle: "Appearance",
         kind: "Actions",
-        icon: <span className="grid h-8 w-8 place-items-center rounded-lg bg-white/12">🌙</span>,
+        icon: <span className="grid h-8 w-8 place-items-center rounded-lg bg-[var(--fill-2)]">🌙</span>,
         haystack: "dark mode appearance theme night",
         run: () => setAppearance("dark"),
       },
@@ -87,7 +87,7 @@ export default function Spotlight() {
         title: "Switch to Light",
         subtitle: "Appearance",
         kind: "Actions",
-        icon: <span className="grid h-8 w-8 place-items-center rounded-lg bg-white/12">☀️</span>,
+        icon: <span className="grid h-8 w-8 place-items-center rounded-lg bg-[var(--fill-2)]">☀️</span>,
         haystack: "light mode appearance theme day",
         run: () => setAppearance("light"),
       },
@@ -96,7 +96,7 @@ export default function Spotlight() {
         title: "Shuffle Wallpaper",
         subtitle: "Desktop",
         kind: "Actions",
-        icon: <span className="grid h-8 w-8 place-items-center rounded-lg bg-white/12">🖼️</span>,
+        icon: <span className="grid h-8 w-8 place-items-center rounded-lg bg-[var(--fill-2)]">🖼️</span>,
         haystack: "wallpaper background desktop shuffle random",
         run: shuffleWallpaper,
       },
@@ -105,7 +105,7 @@ export default function Spotlight() {
         title: "Copy Email Address",
         subtitle: profile.email,
         kind: "Actions",
-        icon: <span className="grid h-8 w-8 place-items-center rounded-lg bg-white/12">📋</span>,
+        icon: <span className="grid h-8 w-8 place-items-center rounded-lg bg-[var(--fill-2)]">📋</span>,
         haystack: `copy email address contact ${profile.email}`,
         run: () => navigator.clipboard?.writeText(profile.email),
       }
@@ -188,11 +188,11 @@ export default function Spotlight() {
             exit={{ scale: 0.96, y: -12 }}
             transition={{ type: "spring", stiffness: 480, damping: 34 }}
             onMouseDown={(e) => e.stopPropagation()}
-            className="w-full max-w-[620px] overflow-hidden rounded-2xl border border-white/16 shadow-2xl"
+            className="w-full max-w-[620px] overflow-hidden rounded-2xl border border-[var(--glass-stroke)] shadow-2xl"
             style={{ background: "var(--glass-deep)", backdropFilter: "blur(44px) saturate(180%)", WebkitBackdropFilter: "blur(44px) saturate(180%)" }}
           >
             <div className="flex items-center gap-3 px-4 py-3.5">
-              <span className="text-white/55">{Glyph.search}</span>
+              <span className="text-[var(--text-mid)]">{Glyph.search}</span>
               <input
                 ref={inputRef}
                 value={q}
@@ -203,9 +203,9 @@ export default function Spotlight() {
                 onKeyDown={onKeyDown}
                 placeholder="Spotlight Search"
                 aria-label="Spotlight Search"
-                className="w-full bg-transparent text-[20px] text-white outline-none placeholder:text-white/35"
+                className="w-full bg-transparent text-[20px] text-[var(--text-hi)] outline-none placeholder:text-[var(--text-lo)]"
               />
-              <kbd className="hidden rounded border border-white/18 px-1.5 py-0.5 font-mono text-[10.5px] text-white/50 sm:block">esc</kbd>
+              <kbd className="hidden rounded border border-[var(--glass-stroke)] px-1.5 py-0.5 font-mono text-[10.5px] text-[var(--text-lo)] sm:block">esc</kbd>
             </div>
 
             {calc && (
@@ -214,26 +214,26 @@ export default function Spotlight() {
                   navigator.clipboard?.writeText(calc.value.replace(/[₹,]/g, "").replace(" / month", ""));
                   setOpen(false);
                 }}
-                className="flex w-full items-center gap-3 border-t border-white/10 px-4 py-3 text-left transition-colors hover:bg-white/6"
+                className="flex w-full items-center gap-3 border-t border-[var(--glass-stroke)] px-4 py-3 text-left transition-colors hover:bg-[var(--fill-1)]"
               >
                 <span className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-[var(--accent)]/22 text-[15px] text-[var(--accent)]">
                   =
                 </span>
                 <span className="min-w-0 flex-1">
-                  <span className="block truncate text-[20px] font-medium tabular-nums text-white">{calc.value}</span>
-                  <span className="block truncate text-[12px] text-white/45">{calc.reading}</span>
+                  <span className="block truncate text-[20px] font-medium tabular-nums text-[var(--text-hi)]">{calc.value}</span>
+                  <span className="block truncate text-[12px] text-[var(--text-lo)]">{calc.reading}</span>
                 </span>
-                <span className="shrink-0 rounded border border-white/18 px-1.5 py-0.5 font-mono text-[10px] text-white/45">
+                <span className="shrink-0 rounded border border-[var(--glass-stroke)] px-1.5 py-0.5 font-mono text-[10px] text-[var(--text-lo)]">
                   copy
                 </span>
               </button>
             )}
 
             {results.length > 0 && (
-              <div className="mac-scroll max-h-[46vh] overflow-y-auto border-t border-white/10 p-1.5">
+              <div className="mac-scroll max-h-[46vh] overflow-y-auto border-t border-[var(--glass-stroke)] p-1.5">
                 {Object.entries(grouped).map(([kind, rows]) => (
                   <div key={kind}>
-                    <p className="px-2.5 pb-1 pt-2 text-[10.5px] font-semibold uppercase tracking-wider text-white/35">{kind}</p>
+                    <p className="px-2.5 pb-1 pt-2 text-[10.5px] font-semibold uppercase tracking-wider text-[var(--text-lo)]">{kind}</p>
                     {rows.map((r) => {
                       flat += 1;
                       const here = flat;
@@ -246,15 +246,15 @@ export default function Spotlight() {
                             setOpen(false);
                           }}
                           className={`flex w-full items-center gap-3 rounded-lg px-2.5 py-2 text-left transition-colors ${
-                            idx === here ? "bg-[var(--accent)]" : "hover:bg-white/8"
+                            idx === here ? "bg-[var(--accent)]" : "hover:bg-[var(--fill-1)]"
                           }`}
                         >
                           {r.icon}
                           <span className="min-w-0 flex-1">
-                            <span className="block truncate text-[14px] text-white">{r.title}</span>
-                            <span className={`block truncate text-[12px] ${idx === here ? "text-white/75" : "text-white/45"}`}>{r.subtitle}</span>
+                            <span className="block truncate text-[14px] text-[var(--text-hi)]">{r.title}</span>
+                            <span className={`block truncate text-[12px] ${idx === here ? "text-[var(--text-mid)]" : "text-[var(--text-lo)]"}`}>{r.subtitle}</span>
                           </span>
-                          {idx === here && <kbd className="shrink-0 font-mono text-[11px] text-white/70">⏎</kbd>}
+                          {idx === here && <kbd className="shrink-0 font-mono text-[11px] text-[var(--text-mid)]">⏎</kbd>}
                         </button>
                       );
                     })}
@@ -264,13 +264,13 @@ export default function Spotlight() {
             )}
 
             {q.trim() && results.length === 0 && !calc && (
-              <p className="border-t border-white/10 px-4 py-7 text-center text-[13.5px] text-white/45">
+              <p className="border-t border-[var(--glass-stroke)] px-4 py-7 text-center text-[13.5px] text-[var(--text-lo)]">
                 No results for “{q}”
               </p>
             )}
 
             {!q.trim() && (
-              <p className="border-t border-white/10 px-4 py-2.5 text-center font-mono text-[11px] text-white/30">
+              <p className="border-t border-[var(--glass-stroke)] px-4 py-2.5 text-center font-mono text-[11px] text-[var(--text-lo)]">
                 also does maths — try 2500*1.12 · 15% of 48000 · cagr 100 250 5 · emi 500000 9 20 · sip 5000 12 10
               </p>
             )}

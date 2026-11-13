@@ -127,7 +127,7 @@ export default function DebtEscapeApp() {
                     className="min-w-0 flex-1 bg-transparent text-[12.5px] font-medium outline-none"
                   />
                   <button onClick={() => setDebts((ds) => ds.filter((x) => x.id !== d.id))} aria-label={`Remove ${d.name}`}
-                    className="shrink-0 rounded px-1.5 text-[13px] text-lo hover:text-red-400">×</button>
+                    className="shrink-0 rounded px-1.5 text-[13px] text-lo hover:text-[var(--bad)]">×</button>
                 </div>
                 <select
                   value={d.kind} onChange={(e) => update(d.id, { kind: e.target.value as DebtKind, minPercent: e.target.value === "card" ? 5 : undefined })}
@@ -148,7 +148,7 @@ export default function DebtEscapeApp() {
         <div className="mac-scroll min-h-0 flex-1 overflow-y-auto p-4 @[760px]:p-5">
           {missing.length > 0 && (
             <div className="mb-4 rounded-xl border border-amber-500/30 bg-amber-500/10 p-3">
-              <p className="text-[12.5px] text-amber-300">
+              <p className="text-[12.5px] text-[var(--warn)]">
                 Still needed before this means anything: {missing.join(", ")}.
               </p>
             </div>
@@ -156,7 +156,7 @@ export default function DebtEscapeApp() {
 
           {cmp.avalanche.neverClears ? (
             <div className="rounded-xl border border-red-500/30 bg-red-500/10 p-4">
-              <p className="text-[14px] font-semibold text-red-300">These payments never clear the debt</p>
+              <p className="text-[14px] font-semibold text-[var(--bad)]">These payments never clear the debt</p>
               <p className="mt-1.5 text-[13px] leading-relaxed text-mid">
                 At these rates the interest keeps pace with what is being paid. The repayments have
                 to rise, or the rates have to come down, before any payoff date exists.
@@ -181,7 +181,7 @@ export default function DebtEscapeApp() {
                     </p>
                   ) : (
                     <p className="text-[13px] leading-relaxed text-mid">
-                      Highest-rate-first saves <strong className="text-emerald-400">{money(cmp.interestSaved)}</strong>
+                      Highest-rate-first saves <strong className="text-[var(--good)]">{money(cmp.interestSaved)}</strong>
                       {cmp.monthsSaved > 0 && <> and finishes {cmp.monthsSaved} month{cmp.monthsSaved === 1 ? "" : "s"} sooner</>}
                       {" "}than smallest-balance-first. Smallest-first clears a debt quicker, which some
                       people need to keep going — that is a real reason, just not a mathematical one.
@@ -197,7 +197,7 @@ export default function DebtEscapeApp() {
                         <span className="font-mono tabular-nums">
                           {d.annualRate.toFixed(1)}%
                           {Math.abs(eff - d.annualRate) > 0.05 && (
-                            <span className="text-emerald-400"> → {eff.toFixed(1)}% after tax</span>
+                            <span className="text-[var(--good)]"> → {eff.toFixed(1)}% after tax</span>
                           )}
                         </span>
                       </li>
@@ -233,7 +233,7 @@ export default function DebtEscapeApp() {
           {traps.map(({ d, t }) => (
             <section key={d.id} className="mt-4">
               <div className="rounded-xl border border-red-500/30 bg-red-500/10 p-3">
-                <p className="text-[13px] font-semibold text-red-300">{d.name}: the minimum-payment trap</p>
+                <p className="text-[13px] font-semibold text-[var(--bad)]">{d.name}: the minimum-payment trap</p>
                 <p className="mt-1 text-[12.5px] leading-relaxed text-mid">
                   {t.neverClears ? (
                     <>Paying only the minimum never clears this — the payment does not cover the interest.</>
@@ -260,11 +260,11 @@ export default function DebtEscapeApp() {
                 <span className="w-[52px] shrink-0 text-right font-mono text-[12.5px] tabular-nums">−{drop}%</span>
               </div>
               {stress.survives ? (
-                <p className="text-[12.5px] text-emerald-400">
+                <p className="text-[12.5px] text-[var(--good)]">
                   Still covered at {money(stress.newIncome)} a month — commitments are {money(stress.committed)}.
                 </p>
               ) : (
-                <p className="text-[12.5px] leading-relaxed text-amber-400">
+                <p className="text-[12.5px] leading-relaxed text-[var(--warn)]">
                   Short {money(stress.shortfall)} a month. Savings would cover the gap for{" "}
                   <strong>{stress.monthsCovered?.toFixed(1)} months</strong> before something has to give.
                 </p>
@@ -277,7 +277,7 @@ export default function DebtEscapeApp() {
             <h3 className="mb-2 text-[10.5px] font-semibold uppercase tracking-wider text-lo">Emergency buffer</h3>
             <div className="rounded-xl border border-[var(--glass-stroke)] bg-[var(--fill-1)] p-3">
               <p className="text-[12.5px] leading-relaxed text-mid">
-                Savings cover <strong className={buffer.alreadyShort ? "text-amber-400" : "text-emerald-400"}>
+                Savings cover <strong className={buffer.alreadyShort ? "text-[var(--warn)]" : "text-[var(--good)]"}>
                   {buffer.monthsHeld.toFixed(1)} months</strong> of essentials and repayments.
               </p>
               <p className="mt-1.5 text-[12.5px] leading-relaxed text-mid">

@@ -58,22 +58,22 @@ export default function ContextMenu() {
           exit={{ opacity: 0, scale: 0.96 }}
           transition={{ duration: 0.11 }}
           onMouseDown={(e) => e.stopPropagation()}
-          className="fixed z-[9400] w-[220px] origin-top-left rounded-lg border border-white/14 p-1 shadow-2xl"
-          style={{ left: pos.x, top: pos.y, background: "rgba(42,44,52,.9)", backdropFilter: "blur(32px) saturate(180%)" }}
+          className="fixed z-[9400] w-[220px] origin-top-left rounded-lg border border-[var(--glass-stroke)] p-1 shadow-2xl"
+          style={{ left: pos.x, top: pos.y, background: "var(--glass-panel)", backdropFilter: "blur(32px) saturate(180%)" }}
         >
           {items.map((it, i) =>
             it === "---" ? (
-              <li key={i} className="my-1 h-px bg-white/12" />
+              <li key={i} className="my-1 h-px bg-[var(--fill-2)]" />
             ) : it.sub ? (
               <li key={i} className="relative" onMouseEnter={() => setSubOpen(true)} onMouseLeave={() => setSubOpen(false)}>
-                <button className="flex w-full items-center justify-between rounded px-2.5 py-[5px] text-left text-[13px] text-white/92 hover:bg-[var(--accent)]">
+                <button className="flex w-full items-center justify-between rounded px-2.5 py-[5px] text-left text-[13px] text-[var(--text-hi)] hover:bg-[var(--accent)]">
                   {it.label}
                   <span className="text-[10px] opacity-60">▶</span>
                 </button>
                 {subOpen && (
                   <ul
-                    className="absolute left-[210px] top-0 w-[180px] rounded-lg border border-white/14 p-1 shadow-2xl"
-                    style={{ background: "rgba(42,44,52,.92)", backdropFilter: "blur(32px) saturate(180%)" }}
+                    className="absolute left-[210px] top-0 w-[180px] rounded-lg border border-[var(--glass-stroke)] p-1 shadow-2xl"
+                    style={{ background: "var(--glass-panel)", backdropFilter: "blur(32px) saturate(180%)" }}
                   >
                     {WALLPAPERS.map((w) => (
                       <li key={w.id}>
@@ -82,9 +82,9 @@ export default function ContextMenu() {
                             setWallpaper(w.id);
                             setPos(null);
                           }}
-                          className="flex w-full items-center gap-2.5 rounded px-2 py-[5px] text-left text-[13px] text-white/92 hover:bg-[var(--accent)]"
+                          className="flex w-full items-center gap-2.5 rounded px-2 py-[5px] text-left text-[13px] text-[var(--text-hi)] hover:bg-[var(--accent)]"
                         >
-                          <span className="h-5 w-7 shrink-0 rounded border border-white/20" style={{ backgroundImage: w.css, backgroundSize: "cover", backgroundPosition: "center" }} />
+                          <span className="h-5 w-7 shrink-0 rounded border border-[var(--glass-stroke)]" style={{ backgroundImage: w.css, backgroundSize: "cover", backgroundPosition: "center" }} />
                           {w.name}
                         </button>
                       </li>
@@ -99,7 +99,7 @@ export default function ContextMenu() {
                     it.run?.();
                     setPos(null);
                   }}
-                  className="flex w-full items-center justify-between rounded px-2.5 py-[5px] text-left text-[13px] text-white/92 hover:bg-[var(--accent)]"
+                  className="flex w-full items-center justify-between rounded px-2.5 py-[5px] text-left text-[13px] text-[var(--text-hi)] hover:bg-[var(--accent)]"
                 >
                   {it.label}
                   {it.hint && <span className="font-mono text-[11px] opacity-55">{it.hint}</span>}

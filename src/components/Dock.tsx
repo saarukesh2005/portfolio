@@ -151,11 +151,11 @@ function DockItem({
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 6, scale: 0.9 }}
             transition={{ duration: 0.13 }}
-            className="pointer-events-none absolute -top-9 z-10 whitespace-nowrap rounded-md border border-white/14 px-2 py-1 text-[12px] text-white"
+            className="pointer-events-none absolute -top-9 z-10 whitespace-nowrap rounded-md border border-[var(--glass-stroke)] px-2 py-1 text-[12px] text-[var(--text-hi)]"
             style={{ background: "var(--glass-panel)", backdropFilter: "blur(20px)" }}
           >
             {label}
-            {caption && <span className="text-white/50"> — {caption}</span>}
+            {caption && <span className="text-[var(--text-lo)]"> — {caption}</span>}
           </motion.span>
         )}
       </AnimatePresence>

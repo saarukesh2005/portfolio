@@ -164,12 +164,12 @@ function MenuRoot({
           >
             {items.map((it, i) =>
               it === "---" ? (
-                <li key={i} className="my-1 h-px bg-white/12" />
+                <li key={i} className="my-1 h-px bg-[var(--glass-stroke)]" />
               ) : (
                 <li key={i}>
                   <button
                     onClick={() => onPick(it)}
-                    className="flex w-full items-center justify-between gap-6 rounded px-2.5 py-[5px] text-left text-[13px] text-white/92 hover:bg-[var(--accent)] hover:text-white"
+                    className="flex w-full items-center justify-between gap-6 rounded px-2.5 py-[5px] text-left text-[13px] text-[var(--text-hi)] hover:bg-[var(--accent)] hover:text-white"
                   >
                     {it.includes("  ") ? (
                       <>

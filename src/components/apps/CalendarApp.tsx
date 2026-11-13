@@ -4,10 +4,10 @@ import { useMemo, useState } from "react";
 import { timeline, type Milestone } from "@/content/profile";
 
 const KIND: Record<Milestone["kind"], { label: string; dot: string; tint: string }> = {
-  education: { label: "Education", dot: "bg-sky-400", tint: "text-sky-400" },
-  certification: { label: "Certification", dot: "bg-violet-400", tint: "text-violet-400" },
-  work: { label: "Work", dot: "bg-emerald-400", tint: "text-emerald-400" },
-  project: { label: "Project", dot: "bg-amber-400", tint: "text-amber-400" },
+  education: { label: "Education", dot: "bg-sky-400", tint: "text-[var(--info)]" },
+  certification: { label: "Certification", dot: "bg-violet-400", tint: "text-[var(--note)]" },
+  work: { label: "Work", dot: "bg-emerald-400", tint: "text-[var(--good)]" },
+  project: { label: "Project", dot: "bg-amber-400", tint: "text-[var(--warn)]" },
 };
 
 export default function CalendarApp() {
@@ -62,7 +62,7 @@ export default function CalendarApp() {
                   {m.status && m.status !== "done" && (
                     <span
                       className={`mt-1.5 inline-block rounded-md px-2 py-[2px] text-[11.5px] ${
-                        m.status === "active" ? "bg-sky-500/18 text-sky-400" : "bg-amber-500/18 text-amber-400"
+                        m.status === "active" ? "bg-sky-500/18 text-[var(--info)]" : "bg-amber-500/18 text-[var(--warn)]"
                       }`}
                     >
                       {m.status === "active" ? "In progress" : "Result awaited"}

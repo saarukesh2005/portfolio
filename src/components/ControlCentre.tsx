@@ -42,7 +42,7 @@ export default function ControlCentre() {
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, y: -8, scale: 0.97 }}
           transition={{ duration: 0.14 }}
-          className="liquid-glass fixed right-2 top-[30px] z-[9350] w-[292px] rounded-2xl border border-white/14 p-3 shadow-2xl"
+          className="liquid-glass fixed right-2 top-[30px] z-[9350] w-[292px] rounded-2xl border border-[var(--glass-stroke)] p-3 shadow-2xl"
           style={{ background: "var(--glass-panel)" }}
         >
           <NowPlayingCard />
@@ -54,8 +54,8 @@ export default function ControlCentre() {
                 onClick={() => setAppearance(m)}
                 className={`rounded-xl border px-3 py-2.5 text-left text-[12.5px] capitalize transition-colors ${
                   appearance === m
-                    ? "border-[var(--accent)] bg-[var(--accent)]/22 text-white"
-                    : "border-white/10 bg-white/8 text-white/70 hover:bg-white/14"
+                    ? "border-[var(--accent)] bg-[var(--accent)]/22 text-[var(--text-hi)]"
+                    : "border-[var(--glass-stroke)] bg-[var(--fill-1)] text-[var(--text-mid)] hover:bg-[var(--fill-2)]"
                 }`}
               >
                 <span className="mb-1 block text-[15px]">{m === "dark" ? "🌙" : "☀️"}</span>
@@ -64,8 +64,8 @@ export default function ControlCentre() {
             ))}
           </div>
 
-          <div className="mb-2.5 rounded-xl border border-white/10 bg-white/8 p-2.5">
-            <p className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-white/40">Wallpaper</p>
+          <div className="mb-2.5 rounded-xl border border-[var(--glass-stroke)] bg-[var(--fill-1)] p-2.5">
+            <p className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-[var(--text-lo)]">Wallpaper</p>
             <div className="grid grid-cols-5 gap-1.5">
               {WALLPAPERS.map((w) => (
                 <button
@@ -73,7 +73,7 @@ export default function ControlCentre() {
                   onClick={() => setWallpaper(w.id)}
                   title={w.name}
                   className={`h-8 rounded-md border-2 transition-colors ${
-                    wallpaperId === w.id ? "border-[var(--accent)]" : "border-transparent hover:border-white/30"
+                    wallpaperId === w.id ? "border-[var(--accent)]" : "border-transparent hover:border-[var(--glass-stroke)]"
                   }`}
                   style={{ backgroundImage: w.css, backgroundSize: "cover", backgroundPosition: "center" }}
                 />
@@ -94,7 +94,7 @@ export default function ControlCentre() {
                   setOpen(false);
                   b.run();
                 }}
-                className={`rounded-xl border border-white/10 bg-white/8 px-2 py-2.5 text-[11.5px] text-white/75 transition-colors hover:bg-white/14 ${
+                className={`rounded-xl border border-[var(--glass-stroke)] bg-[var(--fill-1)] px-2 py-2.5 text-[11.5px] text-[var(--text-mid)] transition-colors hover:bg-[var(--fill-2)] ${
                   b.desktopOnly ? "hidden sm:block" : ""
                 }`}
               >
@@ -109,7 +109,7 @@ export default function ControlCentre() {
               setOpen(false);
               openApp("settings", { size: { w: 700, h: 520 } });
             }}
-            className="mt-2.5 w-full rounded-xl border border-white/10 bg-white/8 py-2 text-[12.5px] text-white/75 transition-colors hover:bg-white/14"
+            className="mt-2.5 w-full rounded-xl border border-[var(--glass-stroke)] bg-[var(--fill-1)] py-2 text-[12.5px] text-[var(--text-mid)] transition-colors hover:bg-[var(--fill-2)]"
           >
             System Settings…
           </button>

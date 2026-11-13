@@ -122,7 +122,7 @@ export default function DocumentImport({
               Scan pasted text
             </button>
 
-            {note && <p className="mt-3 text-[12.5px] leading-relaxed text-amber-400">{note}</p>}
+            {note && <p className="mt-3 text-[12.5px] leading-relaxed text-[var(--warn)]">{note}</p>}
           </>
         )}
 
@@ -175,7 +175,7 @@ export default function DocumentImport({
                       </span>
                       <span className="mt-0.5 block truncate font-mono text-[11px] text-lo">{m.source}</span>
                       {m.confidence === "medium" && (
-                        <span className="mt-1 inline-block rounded bg-amber-500/18 px-1.5 py-[1px] text-[10.5px] text-amber-400">
+                        <span className="mt-1 inline-block rounded bg-amber-500/18 px-1.5 py-[1px] text-[10.5px] text-[var(--warn)]">
                           check this one
                         </span>
                       )}

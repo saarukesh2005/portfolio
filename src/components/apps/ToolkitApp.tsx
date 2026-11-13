@@ -277,7 +277,7 @@ export default function ToolkitApp() {
                 </div>
                 {loan.saved > 0 && (
                   <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-3">
-                    <p className="text-[13px] text-emerald-300">
+                    <p className="text-[13px] text-[var(--good)]">
                       Prepaying saves <strong>{money(loan.saved)}</strong> in interest
                       {loan.monthsSaved > 0 && (
                         <> and clears the loan {Math.floor(loan.monthsSaved / 12)}y {loan.monthsSaved % 12}m early</>
@@ -405,7 +405,7 @@ export default function ToolkitApp() {
                     {money(flows.returned)} back
                     {flows.dated ? " · dated, so XIRR applies" : " · undated, so equal periods assumed"}
                   </p>
-                  <p className={`mt-1.5 ${flows.npv >= 0 ? "text-emerald-400" : "text-amber-400"}`}>
+                  <p className={`mt-1.5 ${flows.npv >= 0 ? "text-[var(--good)]" : "text-[var(--warn)]"}`}>
                     {flows.npv >= 0
                       ? `Positive NPV — the project clears a ${num(Number(discount) || 0, 1)}% hurdle rate.`
                       : `Negative NPV — the project does not clear a ${num(Number(discount) || 0, 1)}% hurdle rate.`}
@@ -445,7 +445,7 @@ export default function ToolkitApp() {
                 </p>
               </div>
             ) : (
-              <p className="text-[13px] leading-relaxed text-amber-400">
+              <p className="text-[13px] leading-relaxed text-[var(--warn)]">
                 Price must exceed variable cost per unit — otherwise every sale deepens the loss and
                 there is no break-even point.
               </p>

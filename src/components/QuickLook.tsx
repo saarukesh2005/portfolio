@@ -50,23 +50,23 @@ export default function QuickLook() {
             exit={{ scale: 0.9, opacity: 0 }}
             transition={{ type: "spring", stiffness: 500, damping: 34 }}
             onClick={(e) => e.stopPropagation()}
-            className="w-full max-w-[360px] overflow-hidden rounded-2xl border border-white/16 shadow-2xl"
-            style={{ background: "rgba(38,40,48,.9)", backdropFilter: "blur(40px) saturate(170%)" }}
+            className="w-full max-w-[360px] overflow-hidden rounded-2xl border border-[var(--glass-stroke)] shadow-2xl"
+            style={{ background: "var(--glass-deep)", backdropFilter: "blur(40px) saturate(170%)" }}
           >
-            <div className="flex items-center justify-between border-b border-white/10 px-4 py-2">
-              <span className="truncate text-[13px] font-medium text-white">{app.name}</span>
-              <kbd className="shrink-0 rounded border border-white/18 px-1.5 py-0.5 font-mono text-[10px] text-white/45">
+            <div className="flex items-center justify-between border-b border-[var(--glass-stroke)] px-4 py-2">
+              <span className="truncate text-[13px] font-medium text-[var(--text-hi)]">{app.name}</span>
+              <kbd className="shrink-0 rounded border border-[var(--glass-stroke)] px-1.5 py-0.5 font-mono text-[10px] text-[var(--text-lo)]">
                 space
               </kbd>
             </div>
 
             <div className="flex flex-col items-center px-6 py-7 text-center">
               <span className="h-[104px] w-[104px] drop-shadow-xl">{app.icon}</span>
-              <h2 className="mt-4 text-[18px] font-semibold text-white">{app.name}</h2>
-              <p className="mt-1.5 text-[13px] leading-relaxed text-white/60">{app.blurb}</p>
+              <h2 className="mt-4 text-[18px] font-semibold text-[var(--text-hi)]">{app.name}</h2>
+              <p className="mt-1.5 text-[13px] leading-relaxed text-[var(--text-mid)]">{app.blurb}</p>
             </div>
 
-            <div className="flex gap-2 border-t border-white/10 p-3">
+            <div className="flex gap-2 border-t border-[var(--glass-stroke)] p-3">
               <button
                 onClick={() => {
                   setQuickLook(null);
@@ -79,7 +79,7 @@ export default function QuickLook() {
               </button>
               <button
                 onClick={() => setQuickLook(null)}
-                className="rounded-lg border border-white/14 bg-white/8 px-3.5 py-2 text-[13px] text-white/75 transition-colors hover:bg-white/16"
+                className="rounded-lg border border-[var(--glass-stroke)] bg-[var(--fill-1)] px-3.5 py-2 text-[13px] text-[var(--text-mid)] transition-colors hover:bg-[var(--fill-3)]"
               >
                 Done
               </button>
