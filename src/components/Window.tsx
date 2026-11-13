@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { motion } from "motion/react";
 import { appById } from "@/lib/apps";
-import { useWindows, type WindowInstance, MENUBAR_H } from "@/lib/store";
+import { useWindows, type WindowInstance, MENUBAR_H, DOCK_RESERVE } from "@/lib/store";
 
 const MIN_W = 360;
 const MIN_H = 240;
@@ -20,6 +20,9 @@ const HANDLES = [
   { dir: "se", cls: "bottom-0 right-0 h-3 w-3 cursor-nwse-resize" },
 ] as const;
 
+/* how close to an edge a drag has to end for the window to snap, in px */
+const SNAP = 28;
+
 export default function Window({ win, active }: { win: WindowInstance; active: boolean }) {
   const { close, focus, minimize, toggleMaximize, setRect } = useWindows();
   const app = appById(win.appId);
@@ -30,6 +33,8 @@ export default function Window({ win, active }: { win: WindowInstance; active: b
   const isMobile = typeof window !== "undefined" && window.innerWidth < 760;
 
   /* ── drag the title bar ───────────────────────────────── */
+  const [snap, setSnap] = useState<"left" | "right" | "full" | null>(null);
+
   const startDrag = useCallback(
     (e: React.PointerEvent) => {
       if (win.maximized || isMobile) return;
@@ -44,22 +49,43 @@ export default function Window({ win, active }: { win: WindowInstance; active: b
       const maxX = window.innerWidth - 60;
       const maxY = window.innerHeight - 40;
 
+      /* where the pointer ended decides the snap, not where the window did —
+         dragging a window by its right edge should still snap left if that
+         is where you took the cursor */
+      let lastX = startX;
+      let lastY = startY;
+
       const move = (ev: PointerEvent) => {
+        lastX = ev.clientX;
+        lastY = ev.clientY;
         setRect(win.id, {
           x: Math.min(Math.max(60 - win.w, originX + ev.clientX - startX), maxX),
           y: Math.min(Math.max(MENUBAR_H, originY + ev.clientY - startY), maxY),
         });
+        setSnap(ev.clientY < MENUBAR_H + SNAP ? "full" : ev.clientX < SNAP ? "left" : ev.clientX > window.innerWidth - SNAP ? "right" : null);
       };
+
       const up = () => {
         window.removeEventListener("pointermove", move);
         window.removeEventListener("pointerup", up);
         document.body.style.userSelect = "";
+
+        const vw = window.innerWidth;
+        const vh = window.innerHeight;
+        const zone =
+          lastY < MENUBAR_H + SNAP ? "full" : lastX < SNAP ? "left" : lastX > vw - SNAP ? "right" : null;
+        setSnap(null);
+        if (!zone) return;
+
+        const h = vh - MENUBAR_H - DOCK_RESERVE + 40;
+        if (zone === "full") toggleMaximize(win.id, { w: vw, h: vh - 92 });
+        else setRect(win.id, { x: zone === "left" ? 0 : Math.round(vw / 2), y: MENUBAR_H, w: Math.round(vw / 2), h });
       };
       document.body.style.userSelect = "none";
       window.addEventListener("pointermove", move);
       window.addEventListener("pointerup", up);
     },
-    [win.id, win.x, win.y, win.w, win.maximized, isMobile, focus, setRect]
+    [win.id, win.x, win.y, win.w, win.maximized, isMobile, focus, setRect, toggleMaximize]
   );
 
   /* ── resize from any edge ─────────────────────────────── */
@@ -212,6 +238,24 @@ export default function Window({ win, active }: { win: WindowInstance; active: b
         />
         {!active && <div className="pointer-events-none absolute inset-0 bg-black/8" />}
       </div>
+
+      {/* where it will land, shown while the drag is still live */}
+      {snap && (
+        <div
+          aria-hidden
+          className="pointer-events-none fixed z-[7999] rounded-xl border-2 border-white/45 bg-white/12"
+          style={
+            snap === "full"
+              ? { left: 0, top: MENUBAR_H, width: "100vw", height: `calc(100vh - ${MENUBAR_H + 52}px)` }
+              : {
+                  left: snap === "left" ? 0 : "50vw",
+                  top: MENUBAR_H,
+                  width: "50vw",
+                  height: `calc(100vh - ${MENUBAR_H + DOCK_RESERVE - 40}px)`,
+                }
+          }
+        />
+      )}
 
       {/* resize handles */}
       {!win.maximized && !isMobile &&

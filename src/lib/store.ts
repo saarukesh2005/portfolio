@@ -368,6 +368,15 @@ export const useSystem = create<SystemStore>((set, get) => ({
       /* private browsing — the choice just won't survive a reload */
     }
     set({ appearance: v });
+
+    /* Appearance only governs window interiors, so on an empty desktop the
+       toggle looked broken — nothing on screen changed. Bring a matching
+       wallpaper with it, the way a macOS dynamic wallpaper follows the
+       setting, but leave a wallpaper that already suits the mode alone. */
+    const current = WALLPAPERS.find((w) => w.id === get().wallpaperId);
+    if (current && current.dark !== (v === "dark")) {
+      get().setWallpaper(v === "dark" ? "sonoma" : "daybreak");
+    }
   },
 
   wallpaperId: initialWallpaper(),

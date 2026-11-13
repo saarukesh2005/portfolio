@@ -101,9 +101,30 @@
 }
 
 :root[data-appearance="light"] {
-  --glass-bar: rgba(246, 247, 251, 0.62);
   --glass-panel: rgba(250, 251, 253, 0.93);
   --glass-deep: rgba(248, 249, 252, 0.92);
+}
+
+/* ── desktop chrome ─────────────────────────────────────────────────────
+   The menu bar, dock labels, icon labels and the hero sit ON the
+   wallpaper, so their colour follows the wallpaper's brightness — not the
+   light/dark setting, which only governs window interiors. macOS works
+   the same way. Without this the three light wallpapers render white text
+   on a near-white background. CSS-only on purpose, so the blocking script
+   in layout.tsx needs no extra knowledge. */
+:root {
+  --chrome-text: rgba(255, 255, 255, 0.96);
+  --chrome-dim: rgba(255, 255, 255, 0.72);
+  --chrome-shadow: 0 1px 3px rgba(0, 0, 0, 0.85);
+}
+
+:root[data-wallpaper="daybreak"],
+:root[data-wallpaper="mint"],
+:root[data-wallpaper="sakura"] {
+  --glass-bar: rgba(255, 255, 255, 0.58);
+  --chrome-text: rgba(16, 18, 24, 0.94);
+  --chrome-dim: rgba(16, 18, 24, 0.66);
+  --chrome-shadow: 0 1px 3px rgba(255, 255, 255, 0.75);
 }
 
 .liquid-glass {

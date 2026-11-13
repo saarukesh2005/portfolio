@@ -143,9 +143,8 @@ export default function DesktopIcons() {
           >
             <span className="h-[50px] w-[50px] drop-shadow-lg">{app.icon}</span>
             <span
-              className={`line-clamp-2 text-center text-[11.5px] leading-tight text-white ${
-                selected === app.id ? "" : "[text-shadow:0_1px_3px_rgba(0,0,0,.85)]"
-              }`}
+              className="line-clamp-2 text-center text-[11.5px] leading-tight text-[var(--chrome-text)]"
+              style={selected === app.id ? undefined : { textShadow: "var(--chrome-shadow)" }}
             >
               {app.name}
             </span>

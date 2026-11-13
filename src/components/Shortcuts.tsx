@@ -30,6 +30,8 @@ const GROUPS: { title: string; rows: [string, string][] }[] = [
       ["Double-click icon", "Open it"],
       ["Space", "Quick Look the selected icon"],
       ["Drag", "Move a desktop icon anywhere"],
+    ["⌘ `", "Cycle between open windows"],
+    ["Drag to an edge", "Snap a window left, right or full screen"],
       ["Right-click", "Desktop menu"],
       ["⌘ P", "Print the résumé"],
     ],

@@ -63,6 +63,24 @@ export default function Desktop() {
     };
   }, [reflow]);
 
+  /* ⌘` cycles windows, the way it does on a Mac. Minimised windows are
+     skipped — bringing back something the user put away is not cycling. */
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (!(e.metaKey || e.ctrlKey) || e.key !== "`") return;
+      const open = useWindows.getState().windows.filter((w) => !w.minimized);
+      if (open.length < 2) return;
+      e.preventDefault();
+      const order = [...open].sort((a, b) => a.z - b.z);
+      const step = e.shiftKey ? -1 : 1;
+      const here = order.findIndex((w) => w.id === useWindows.getState().focusedId());
+      const next = order[(here + step + order.length) % order.length];
+      useWindows.getState().focus(next.id);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
+
   const finishBoot = useCallback(() => {
     setBooted(true);
     if (greeted.current) return;
@@ -157,10 +175,15 @@ function EmptyHint() {
             : undefined
         }
       >
-        <h1 className="text-[34px] font-semibold tracking-[-0.03em] text-white [text-shadow:0_2px_20px_rgba(0,0,0,.6)] sm:text-[44px]">
+        <h1
+          className="text-[34px] font-semibold tracking-[-0.03em] text-[var(--chrome-text)] sm:text-[44px]"
+          style={{ textShadow: "var(--chrome-shadow)" }}
+        >
           {profile.name}
         </h1>
-        <p className="mt-1.5 text-[15px] text-white/75 [text-shadow:0_1px_10px_rgba(0,0,0,.6)]">{profile.role}</p>
+        <p className="mt-1.5 text-[15px] text-[var(--chrome-dim)]" style={{ textShadow: "var(--chrome-shadow)" }}>
+          {profile.role}
+        </p>
 
         {/* A visitor who does not explore sees nothing but a wallpaper and
             leaves. Point them at the strongest thing here, by name, rather
@@ -174,7 +197,7 @@ function EmptyHint() {
           </button>
           <button
             onClick={() => setSpotlight(true)}
-            className="rounded-full px-3 py-1 text-[12.5px] text-white/65 transition-colors hover:text-white"
+            className="rounded-full px-3 py-1 text-[12.5px] text-[var(--chrome-dim)] transition-opacity hover:opacity-100"
           >
             <span className="hidden sm:inline">
               or press <kbd className="font-mono">⌘K</kbd> to search everything

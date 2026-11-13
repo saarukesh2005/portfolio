@@ -3,21 +3,9 @@
 import type { ComponentType, ReactNode } from "react";
 import AboutApp from "@/components/apps/AboutApp";
 import ProjectsApp from "@/components/apps/ProjectsApp";
-import TerminalApp from "@/components/apps/TerminalApp";
 import ResumeApp from "@/components/apps/ResumeApp";
 import MailApp from "@/components/apps/MailApp";
-import SettingsApp from "@/components/apps/SettingsApp";
 import CrewApp from "@/components/apps/CrewApp";
-import AnalyserApp from "@/components/apps/AnalyserApp";
-import TimeMachineApp from "@/components/apps/TimeMachineApp";
-import ToolkitApp from "@/components/apps/ToolkitApp";
-import DebtEscapeApp from "@/components/apps/DebtEscapeApp";
-import ResearchApp from "@/components/apps/ResearchApp";
-import CalendarApp from "@/components/apps/CalendarApp";
-import NumbersApp from "@/components/apps/NumbersApp";
-import PhotosApp from "@/components/apps/PhotosApp";
-import CalculatorApp from "@/components/apps/CalculatorApp";
-import WantedApp from "@/components/apps/WantedApp";
 import {
   LuffyIcon,
   ProjectsIcon,
@@ -39,8 +27,38 @@ import {
   CalculatorIcon,
   WantedIcon,
 } from "@/components/Icons";
+
+import dynamic from "next/dynamic";
+
+/**
+ * Only the apps a visitor meets first are bundled up front — About opens
+ * itself on boot. The rest are fetched when their window is opened, which
+ * is where most of the JavaScript was going: Research alone pulls in a
+ * Markdown renderer, and the Analyser pulls a PDF parser.
+ */
+const Loading = () => (
+  <div className="grid h-full place-items-center text-[13px] text-lo">Opening…</div>
+);
+
+const lazy = (load: () => Promise<{ default: ComponentType<AppProps> }>) =>
+  dynamic(load, { ssr: false, loading: Loading });
+
+const TerminalApp = lazy(() => import("@/components/apps/TerminalApp"));
+const SettingsApp = lazy(() => import("@/components/apps/SettingsApp"));
+const AnalyserApp = lazy(() => import("@/components/apps/AnalyserApp"));
+const TimeMachineApp = lazy(() => import("@/components/apps/TimeMachineApp"));
+const ToolkitApp = lazy(() => import("@/components/apps/ToolkitApp"));
+const DebtEscapeApp = lazy(() => import("@/components/apps/DebtEscapeApp"));
+const ResearchApp = lazy(() => import("@/components/apps/ResearchApp"));
+const CalendarApp = lazy(() => import("@/components/apps/CalendarApp"));
+const NumbersApp = lazy(() => import("@/components/apps/NumbersApp"));
+const PhotosApp = lazy(() => import("@/components/apps/PhotosApp"));
+const CalculatorApp = lazy(() => import("@/components/apps/CalculatorApp"));
+const WantedApp = lazy(() => import("@/components/apps/WantedApp"));
 import { profile } from "@/content/profile";
 import { HIDDEN_APPS } from "@/lib/visibility";
+
+type AppProps = { payload?: unknown; active?: boolean };
 
 export type AppDef = {
   id: string;
@@ -49,7 +67,7 @@ export type AppDef = {
   /** one line, shown in Quick Look */
   blurb: string;
   icon: ReactNode;
-  Component?: ComponentType<{ payload?: unknown; active?: boolean }>;
+  Component?: ComponentType<AppProps>;
   size: { w: number; h: number };
   /** pinned to the dock */
   dock: boolean;

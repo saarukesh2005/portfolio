@@ -178,15 +178,15 @@ function DockItem({
 
       {size.width > 0 && (
         <span
-          className="mt-[4px] w-full truncate text-center text-[9.5px] leading-[1.15] text-white [text-shadow:0_1px_2px_rgba(0,0,0,.85)]"
-          style={{ maxWidth: size.width }}
+          className="mt-[4px] w-full truncate text-center text-[9.5px] leading-[1.15] text-[var(--chrome-text)]"
+          style={{ textShadow: "var(--chrome-shadow)", maxWidth: size.width }}
         >
           {label}
         </span>
       )}
 
       <span
-        className={`h-[3px] w-[3px] rounded-full bg-white/85 ${size.width > 0 ? "mt-[2px]" : "mt-[3px]"} ${
+        className={`h-[3px] w-[3px] rounded-full bg-[var(--chrome-text)] ${size.width > 0 ? "mt-[2px]" : "mt-[3px]"} ${
           running ? "opacity-100" : "opacity-0"
         }`}
       />

@@ -6,6 +6,7 @@ import remarkGfm from "remark-gfm";
 import { publishedResearch, readingTime, type ResearchNote } from "@/content/research";
 import { profile } from "@/content/profile";
 import { Glyph } from "@/components/Icons";
+import { useWindows } from "@/lib/store";
 
 const longDate = (iso: string) =>
   new Date(iso + "T00:00:00").toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" });
@@ -45,19 +46,57 @@ const COMPONENTS = {
 
 export default function ResearchApp() {
   const notes = useMemo(() => publishedResearch(), []);
+  const openApp = useWindows((st) => st.open);
   const [slug, setSlug] = useState<string | null>(null);
   const open = notes.find((n) => n.slug === slug);
 
   if (notes.length === 0) {
     return (
-      <div className="grid h-full place-items-center px-8 text-center">
-        <div className="max-w-[44ch]">
-          <span className="mb-3 block text-[34px]">📝</span>
-          <h2 className="mb-2 text-[16px] font-semibold">Nothing published yet</h2>
-          <p className="text-[13px] leading-relaxed text-mid">
-            Equity research notes go here — the write-ups where the reasoning is the point, not
-            just the conclusion.
-          </p>
+      <div className="mac-scroll h-full overflow-y-auto">
+        <div className="mx-auto grid min-h-full max-w-[52ch] place-items-center px-8 py-10 text-center">
+          <div>
+            <span className="mb-3 block text-[34px]">📝</span>
+            <h2 className="mb-2 text-[17px] font-semibold">First report is being written</h2>
+            <p className="text-[13.5px] leading-relaxed text-mid">
+              Equity research notes land here once my CMA exams are behind me — the write-ups
+              where the reasoning is the point, not just the conclusion.
+            </p>
+
+            <div className="mt-6 rounded-xl border border-[var(--glass-stroke)] bg-[var(--fill-1)] p-4 text-left">
+              <p className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-lo">
+                How they will be built
+              </p>
+              <ul className="space-y-1.5 text-[13px] leading-relaxed text-mid">
+                <li>Audited annual reports as the only source for figures</li>
+                <li>Ratios computed, not quoted — profitability, liquidity, efficiency, leverage</li>
+                <li>Multi-year trends before any judgement about a single year</li>
+                <li>The reasoning shown, so a reader can disagree with it</li>
+              </ul>
+            </div>
+
+            <p className="mt-5 text-[13px] leading-relaxed text-mid">
+              That method already has a worked example: five years of Bharat Dynamics Ltd., ratio
+              by ratio, from the audited reports.
+            </p>
+            <div className="mt-4 flex flex-wrap justify-center gap-2">
+              <button
+                onClick={() => openApp("projects", { size: { w: 900, h: 610 } })}
+                className="rounded-full bg-[var(--accent)] px-4 py-2 text-[12.5px] font-medium text-white transition-transform hover:scale-[1.03]"
+              >
+                See the BDL analysis
+              </button>
+              <button
+                onClick={() => openApp("analyser", { size: { w: 960, h: 680 } })}
+                className="rounded-full border border-[var(--glass-stroke)] bg-[var(--fill-1)] px-4 py-2 text-[12.5px] transition-colors hover:bg-[var(--fill-2)]"
+              >
+                Try the Ratio Analyser
+              </button>
+            </div>
+
+            <p className="mt-6 text-[11.5px] leading-relaxed text-lo">
+              Nothing here is investment advice. I am not a SEBI-registered research analyst.
+            </p>
+          </div>
         </div>
       </div>
     );

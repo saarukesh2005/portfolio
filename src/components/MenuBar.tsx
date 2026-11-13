@@ -70,7 +70,7 @@ export default function MenuBar() {
   return (
     <div
       ref={barRef}
-      className="liquid-glass fixed inset-x-0 top-0 z-[9000] flex h-[28px] items-center gap-1 px-2.5 text-[13px] text-white"
+      className="liquid-glass fixed inset-x-0 top-0 z-[9000] flex h-[28px] items-center gap-1 px-2.5 text-[13px] text-[var(--chrome-text)]"
       style={{
         background: "var(--glass-bar)",
       }}
