@@ -144,12 +144,24 @@ export default function Window({ win, active }: { win: WindowInstance; active: b
       role="dialog"
       aria-label={app.name}
       initial={{ opacity: 0, scale: 0.94, y: 10 }}
+      /* Minimising is a genie: the real one warps the window along a curve,
+         which needs a mesh. Squeezing hard on X while falling toward the
+         dock and rounding the corners off reads as the same gesture, and
+         easing in rather than springing gives it the suck. */
       animate={{
         opacity: closing || minimizing ? 0 : 1,
-        scale: closing ? 0.94 : minimizing ? 0.28 : 1,
-        y: minimizing ? window.innerHeight - win.y - 40 : 0,
+        scale: closing ? 0.94 : 1,
+        scaleX: minimizing ? 0.12 : 1,
+        scaleY: minimizing ? 0.3 : 1,
+        x: minimizing ? window.innerWidth / 2 - (win.x + win.w / 2) : 0,
+        y: minimizing ? window.innerHeight - win.y - 30 : 0,
+        borderRadius: minimizing ? 48 : 12,
       }}
-      transition={{ type: "spring", stiffness: 520, damping: 38, mass: 0.7 }}
+      transition={
+        minimizing
+          ? { duration: 0.42, ease: [0.42, 0, 0.9, 0.62] }
+          : { type: "spring", stiffness: 520, damping: 38, mass: 0.7 }
+      }
       onPointerDown={() => focus(win.id)}
       className={`window-surface absolute flex flex-col overflow-hidden rounded-xl ${
         active ? "window-shadow" : "window-shadow-inactive"
@@ -160,6 +172,7 @@ export default function Window({ win, active }: { win: WindowInstance; active: b
         width: win.w,
         height: win.h,
         zIndex: win.z,
+        transformOrigin: "bottom center",
       }}
     >
       {/* title bar */}
@@ -190,6 +203,13 @@ export default function Window({ win, active }: { win: WindowInstance; active: b
       {/* body */}
       <div className="relative min-h-0 flex-1 overflow-hidden">
         <Body payload={win.payload} active={active} />
+        {/* A pane that ends mid-button reads as a rendering fault rather than
+            as "there is more below". One soft edge here covers every app. */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-x-0 bottom-0 h-6"
+          style={{ background: "linear-gradient(to top, rgba(0,0,0,.22), transparent)" }}
+        />
         {!active && <div className="pointer-events-none absolute inset-0 bg-black/8" />}
       </div>
 

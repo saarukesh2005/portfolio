@@ -19,8 +19,8 @@ export default function Notifications() {
             exit={{ opacity: 0, x: 60, scale: 0.94 }}
             transition={{ type: "spring", stiffness: 420, damping: 34 }}
             onClick={() => dismiss(t.id)}
-            className="pointer-events-auto flex w-full items-start gap-3 rounded-2xl border border-white/14 p-3 text-left shadow-2xl"
-            style={{ background: "rgba(42,44,52,.86)", backdropFilter: "blur(32px) saturate(180%)", WebkitBackdropFilter: "blur(32px) saturate(180%)" }}
+            className="liquid-glass pointer-events-auto flex w-full items-start gap-3 rounded-2xl border border-white/14 p-3 text-left shadow-2xl"
+            style={{ background: "var(--glass-panel)" }}
           >
             <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-white/12 text-[17px]">{t.emoji ?? "🔔"}</span>
             <span className="min-w-0 flex-1">

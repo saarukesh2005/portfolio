@@ -42,8 +42,8 @@ export default function ControlCentre() {
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, y: -8, scale: 0.97 }}
           transition={{ duration: 0.14 }}
-          className="fixed right-2 top-[30px] z-[9350] w-[292px] rounded-2xl border border-white/14 p-3 shadow-2xl"
-          style={{ background: "rgba(42,44,52,.86)", backdropFilter: "blur(38px) saturate(180%)" }}
+          className="liquid-glass fixed right-2 top-[30px] z-[9350] w-[292px] rounded-2xl border border-white/14 p-3 shadow-2xl"
+          style={{ background: "var(--glass-panel)" }}
         >
           <NowPlayingCard />
 

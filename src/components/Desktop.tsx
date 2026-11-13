@@ -135,6 +135,7 @@ export default function Desktop() {
 
 function EmptyHint() {
   const setSpotlight = useSystem((s) => s.setSpotlight);
+  const openApp = useWindows((s) => s.open);
   // a gradient wallpaper reads fine behind plain text; a photo does not
   const photo = useSystem((s) => s.wallpaper().photo ?? false);
   return (
@@ -160,15 +161,27 @@ function EmptyHint() {
           {profile.name}
         </h1>
         <p className="mt-1.5 text-[15px] text-white/75 [text-shadow:0_1px_10px_rgba(0,0,0,.6)]">{profile.role}</p>
-        <button
-          onClick={() => setSpotlight(true)}
-          className="mt-6 rounded-full border border-white/20 bg-white/12 px-4 py-2 text-[13px] text-white backdrop-blur-xl transition-colors hover:bg-white/20"
-        >
-          <span className="hidden sm:inline">
-            Press <kbd className="font-mono">⌘K</kbd> to search — or click the dock
-          </span>
-          <span className="sm:hidden">Tap an app in the dock to start</span>
-        </button>
+
+        {/* A visitor who does not explore sees nothing but a wallpaper and
+            leaves. Point them at the strongest thing here, by name, rather
+            than hoping they go looking for it. */}
+        <div className="mt-6 flex flex-col items-center gap-3">
+          <button
+            onClick={() => openApp("analyser", { size: { w: 960, h: 680 } })}
+            className="rounded-full bg-[var(--accent)] px-5 py-2.5 text-[13.5px] font-medium text-white shadow-lg transition-transform hover:scale-[1.03] active:scale-[0.98]"
+          >
+            Open Ratio Analyser — drop in a balance sheet →
+          </button>
+          <button
+            onClick={() => setSpotlight(true)}
+            className="rounded-full px-3 py-1 text-[12.5px] text-white/65 transition-colors hover:text-white"
+          >
+            <span className="hidden sm:inline">
+              or press <kbd className="font-mono">⌘K</kbd> to search everything
+            </span>
+            <span className="sm:hidden">or browse the dock below</span>
+          </button>
+        </div>
       </div>
     </motion.div>
   );

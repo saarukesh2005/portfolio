@@ -70,11 +70,9 @@ export default function MenuBar() {
   return (
     <div
       ref={barRef}
-      className="fixed inset-x-0 top-0 z-[9000] flex h-[28px] items-center gap-1 px-2.5 text-[13px] text-white"
+      className="liquid-glass fixed inset-x-0 top-0 z-[9000] flex h-[28px] items-center gap-1 px-2.5 text-[13px] text-white"
       style={{
-        background: "rgba(0,0,0,.28)",
-        backdropFilter: "blur(26px) saturate(180%)",
-        WebkitBackdropFilter: "blur(26px) saturate(180%)",
+        background: "var(--glass-bar)",
       }}
     >
       {/*  menu */}
@@ -161,8 +159,8 @@ function MenuRoot({
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -4, scale: 0.98 }}
             transition={{ duration: 0.12 }}
-            className="absolute left-0 top-[26px] min-w-[216px] rounded-lg border border-white/12 p-1 shadow-2xl"
-            style={{ background: "rgba(42,44,52,.88)", backdropFilter: "blur(30px) saturate(180%)" }}
+            className="liquid-glass absolute left-0 top-[26px] min-w-[216px] rounded-lg border border-white/12 p-1 shadow-2xl"
+            style={{ background: "var(--glass-panel)" }}
           >
             {items.map((it, i) =>
               it === "---" ? (

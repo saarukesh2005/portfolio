@@ -85,6 +85,51 @@
   -webkit-tap-highlight-color: transparent;
 }
 
+/* ── Liquid Glass ───────────────────────────────────────────────────────
+   Tuned to macOS 27 "Golden Gate" rather than the original macOS 26 look.
+   The first Liquid Glass was designed against OLED and read poorly on the
+   LCD panels most Macs actually have, so Apple cut the default
+   transparency, added frost, and softened the lighting — subtle from the
+   top with the side edges darkened. Same priority here: legibility first,
+   glass second. Surfaces keep their own drop shadows; this only supplies
+   the material. */
+:root {
+  --glass-bar: rgba(10, 11, 16, 0.46);
+  --glass-panel: rgba(42, 44, 52, 0.92);
+  --glass-deep: rgba(38, 40, 48, 0.9);
+  --glass-blur: 30px;
+}
+
+:root[data-appearance="light"] {
+  --glass-bar: rgba(246, 247, 251, 0.62);
+  --glass-panel: rgba(250, 251, 253, 0.93);
+  --glass-deep: rgba(248, 249, 252, 0.92);
+}
+
+.liquid-glass {
+  backdrop-filter: blur(var(--glass-blur)) saturate(185%);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(185%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.2),
+    inset 1px 0 0 rgba(0, 0, 0, 0.16),
+    inset -1px 0 0 rgba(0, 0, 0, 0.16),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.2);
+}
+
+:root[data-appearance="light"] .liquid-glass {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    inset 1px 0 0 rgba(0, 0, 0, 0.06),
+    inset -1px 0 0 rgba(0, 0, 0, 0.06),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.08);
+}
+
+/* Concentric corners: a sidebar inside a 12px window reads wrong with
+   square corners, which is the other thing Golden Gate changed. */
+.glass-sidebar {
+  border-radius: 10px;
+}
+
 /* ── keyboard focus ───────────────────────────────────────────────────
    One deliberate ring. The browser default lands inconsistently across
    the dark panels, the light windows and a photo wallpaper, so it is

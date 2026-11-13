@@ -189,7 +189,7 @@ export default function Spotlight() {
             transition={{ type: "spring", stiffness: 480, damping: 34 }}
             onMouseDown={(e) => e.stopPropagation()}
             className="w-full max-w-[620px] overflow-hidden rounded-2xl border border-white/16 shadow-2xl"
-            style={{ background: "rgba(38,40,48,.82)", backdropFilter: "blur(44px) saturate(180%)", WebkitBackdropFilter: "blur(44px) saturate(180%)" }}
+            style={{ background: "var(--glass-deep)", backdropFilter: "blur(44px) saturate(180%)", WebkitBackdropFilter: "blur(44px) saturate(180%)" }}
           >
             <div className="flex items-center gap-3 px-4 py-3.5">
               <span className="text-white/55">{Glyph.search}</span>

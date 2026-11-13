@@ -42,10 +42,12 @@ export default function Dock() {
           labelled ? "pb-2.5" : "pb-1.5"
         }`}
         style={{
-          background: "rgba(255,255,255,.14)",
-          backdropFilter: "blur(28px) saturate(180%)",
-          WebkitBackdropFilter: "blur(28px) saturate(180%)",
-          boxShadow: "0 12px 40px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.22)",
+          background: "rgba(255,255,255,.2)",
+          backdropFilter: "blur(30px) saturate(185%)",
+          WebkitBackdropFilter: "blur(30px) saturate(185%)",
+          /* top specular, darkened sides — the Golden Gate lighting */
+          boxShadow:
+            "0 12px 40px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.26), inset 1px 0 0 rgba(0,0,0,.14), inset -1px 0 0 rgba(0,0,0,.14)",
         }}
       >
         {/* phones lose the desktop icons and the link shortcuts, so this is
@@ -150,7 +152,7 @@ function DockItem({
             exit={{ opacity: 0, y: 6, scale: 0.9 }}
             transition={{ duration: 0.13 }}
             className="pointer-events-none absolute -top-9 z-10 whitespace-nowrap rounded-md border border-white/14 px-2 py-1 text-[12px] text-white"
-            style={{ background: "rgba(40,42,50,.9)", backdropFilter: "blur(20px)" }}
+            style={{ background: "var(--glass-panel)", backdropFilter: "blur(20px)" }}
           >
             {label}
             {caption && <span className="text-white/50"> — {caption}</span>}
